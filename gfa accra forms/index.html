@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aslin Fashion School - Admission Form</title>
+    <meta name="description" content="Apply to Aslin Fashion School. Fill out your official admission application form online.">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div id="app-container">
+
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-inner">
+                <div class="header-logo-wrap">
+                    <img src="logo.jpg" alt="Aslin Fashion School Logo">
+                    <div class="header-brand">
+                        <h1>Aslin Fashion School</h1>
+                        <div class="header-subtitle">Excellence in Fashion Education</div>
+                    </div>
+                </div>
+                <div class="header-badge">&#9679; Official Admission Form &#9679;</div>
+            </div>
+            <!-- Gallery strip -->
+            <div class="header-gallery">
+                <div class="header-gallery-img" style="background-image: url('aslin gallery/IMG_8703.JPG');"></div>
+                <div class="header-gallery-img" style="background-image: url('aslin gallery/IMG_8704.JPG');"></div>
+                <div class="header-gallery-img" style="background-image: url('aslin gallery/IMG_8705.JPG');"></div>
+                <div class="header-gallery-img" style="background-image: url('aslin gallery/IMG_8706.JPG');"></div>
+            </div>
+        </div>
+
+        <!-- GATE SECTION -->
+        <div id="gate-section" class="content">
+            <div class="gate-icon-wrap">&#128274;</div>
+            <h2>Applicant Access Portal</h2>
+            <p>Please enter your authorized Serial Number and PIN to access your admission form.</p>
+
+            <div class="gate-inputs form-group">
+                <label for="gate-serial">Serial Number</label>
+                <input type="text" id="gate-serial" placeholder="e.g. AS3829405810">
+            </div>
+
+            <div class="gate-inputs form-group">
+                <label for="gate-pin">Access PIN</label>
+                <input type="text" id="gate-pin" placeholder="Enter your PIN">
+            </div>
+
+            <div class="error-msg" id="login-error">Invalid Serial Number or PIN. Please try again.</div>
+
+            <div class="gate-inputs">
+                <button class="btn full-width" id="btn-login" style="margin-top: 15px;">Access Form</button>
+            </div>
+
+            <button class="admin-btn" id="admin-access-btn">Admin Access</button>
+        </div>
+
+        <!-- SUCCESS SECTION -->
+        <div id="success-section" class="content hidden" style="text-align: center; padding: 50px 30px;">
+            <div class="check-icon">&#10004;</div>
+            <h2 style="color: #111; font-family: 'Playfair Display', serif;">Submission Successful!</h2>
+            <p style="margin: 15px 0; line-height: 1.7; color: #555; font-size: 15px;">
+                Thank you for your application. Your details have been received securely.
+            </p>
+            <div style="background: #f8f8f8; padding: 20px; border-radius: 12px; margin: 20px 0; text-align: left; border-left: 4px solid #cc0000;">
+                <p style="margin:0 0 10px; font-weight: 700; color: #111;">Next Steps:</p>
+                <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #555; line-height: 2;">
+                    <li>Your application has been recorded in our system.</li>
+                    <li>The administration will review your application.</li>
+                    <li>Log back in anytime to review your submitted details.</li>
+                    <li>Remember to download the form and bring it to school.</li>
+                </ul>
+            </div>
+            <button class="btn full-width" id="btn-download-admission" style="margin-top: 20px;" onclick="downloadAdmissionLetter()">
+                &#128196; Download Admission Letter
+            </button>
+        </div>
+
+        <!-- MAIN FORM SECTION -->
+        <div id="form-section" class="content hidden">
+
+            <!-- Read-only banner -->
+            <div id="readonly-banner" class="readonly-banner hidden">
+                <h3>&#128274; Read-Only Mode</h3>
+                <p>Your application has already been submitted. You may review your details below, but no further edits are permitted.</p>
+                <div style="display:flex; gap:10px; justify-content:center; margin-top:10px; flex-wrap:wrap;">
+                    <button type="button" class="btn" id="btn-download" style="padding: 10px 20px; font-size: 13px;">Download Filled Form</button>
+                    <button type="button" class="btn" id="btn-download-admission-readonly" style="padding: 10px 20px; font-size: 13px;" onclick="downloadAdmissionLetter()">&#128196; Admission Letter</button>
+                </div>
+            </div>
+
+            <form id="admission-form" action="https://formsubmit.co/generalfashionacademyaccra@gmail.com" method="POST"
+                enctype="multipart/form-data" onsubmit="event.preventDefault();">
+                <!-- Hidden values -->
+                <input type="hidden" name="current-serial" id="current-serial">
+                <input type="hidden" name="gate-pin" id="hidden-pin">
+                <input type="hidden" name="_subject" id="fs-subject" value="">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="Applicant_Details" id="fs-details" value="">
+
+                <!-- Section A -->
+                <div class="form-section">
+                    <h2>Section A: Applicant Particulars</h2>
+
+                    <div class="form-group" style="border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px;">
+                        <label>Applicant Passport Picture</label>
+                        <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                            <div id="passport-preview"
+                                style="width: 120px; height: 150px; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; background: #f9f9f9; overflow: hidden; border-radius: 8px; flex-shrink: 0;">
+                                <span id="preview-text" style="font-size: 12px; color: #aaa; text-align: center;">No Image</span>
+                                <img id="preview-img" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                            </div>
+                            <div style="flex: 1; min-width: 200px;">
+                                <input type="file" name="attachment" id="passport-upload" accept="image/*" required style="padding: 8px;">
+                                <p style="font-size: 12px; color: #888; margin-top: 8px;">Required. Must be a clear passport-style photograph.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px;">
+                        <label style="color: #cc0000; font-size: 14px;">Select Preferred Branch</label>
+                        <p style="font-size: 12px; color: #888; margin: 4px 0 12px;">We have two branches. Please select the one you prefer:</p>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="branch-accra" name="preferred_branch" value="Accra Branch" required>
+                                <label for="branch-accra">Accra Branch</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="branch-kumasi" name="preferred_branch" value="Kumasi Branch">
+                                <label for="branch-kumasi">Kumasi Branch</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div>
+                            <label>Surname</label>
+                            <input type="text" name="surname" required>
+                        </div>
+                        <div>
+                            <label>First Name</label>
+                            <input type="text" name="firstname" required>
+                        </div>
+                        <div>
+                            <label>Other Names</label>
+                            <input type="text" name="othernames">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div>
+                            <label>Gender</label>
+                            <div class="radio-group" id="gender-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="gender" value="Male" id="gender-male" required>
+                                    <label for="gender-male">Male</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="gender" value="Female" id="gender-female">
+                                    <label for="gender-female">Female</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label>Date of Birth</label>
+                            <input type="date" name="dob" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div>
+                            <label>Place of Birth</label>
+                            <input type="text" name="pob" required>
+                        </div>
+                        <div>
+                            <label>Hometown &amp; Region</label>
+                            <input type="text" name="hometown" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div>
+                            <label>Religious Denomination</label>
+                            <input type="text" name="religion" required>
+                        </div>
+                        <div>
+                            <label>Residential Status</label>
+                            <select name="residential" required>
+                                <option value="">Select Option</option>
+                                <option value="Day">Day</option>
+                                <option value="Boarding/Hostel">Boarding / Hostel</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section B -->
+                <div class="form-section">
+                    <h2>Section B: Contact &amp; Background Information</h2>
+                    <div class="form-group">
+                        <label>Address (Town, Street Name, Personal Contact)</label>
+                        <textarea name="contact_address" required></textarea>
+                    </div>
+
+                    <div class="form-group row">
+                        <div>
+                            <label>Living Situation</label>
+                            <select name="living_situation" required>
+                                <option value="">Select Option</option>
+                                <option value="Both Parents">Both Parents</option>
+                                <option value="Mother Only">Mother Only</option>
+                                <option value="Father Only">Father Only</option>
+                                <option value="Guardian/Other">Guardian / Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>How did you hear about Aslin Fashion School?</label>
+                            <select name="marketing" required>
+                                <option value="">Select Option</option>
+                                <option value="Flyer">Flyer</option>
+                                <option value="Friend">Friend / Word of Mouth</option>
+                                <option value="Website/Social Media">Website / Social Media</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Is this your first time in a fashion center?</label>
+                        <div class="radio-group" id="fashion-bg-group">
+                            <div class="radio-item">
+                                <input type="radio" name="first_time" value="Yes" id="ft-yes" required>
+                                <label for="ft-yes">Yes</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" name="first_time" value="No" id="ft-no">
+                                <label for="ft-no">No</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group hidden" id="previous-school-div">
+                        <label>If No, provide previous school details:</label>
+                        <textarea name="previous_school"></textarea>
+                    </div>
+                </div>
+
+                <!-- Section C -->
+                <div class="form-section">
+                    <h2>Section C: Family Information</h2>
+
+                    <div class="form-group row">
+                        <div>
+                            <label>Father's Name</label>
+                            <input type="text" name="father_name">
+                        </div>
+                        <div>
+                            <label>Mother's Name</label>
+                            <input type="text" name="mother_name">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div>
+                            <label>Father's Occupation</label>
+                            <input type="text" name="father_job">
+                        </div>
+                        <div>
+                            <label>Mother's Occupation</label>
+                            <input type="text" name="mother_job">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div>
+                            <label>Father's Phone Number(s)</label>
+                            <input type="tel" name="father_phone">
+                        </div>
+                        <div>
+                            <label>Mother's Phone Number(s)</label>
+                            <input type="tel" name="mother_phone">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
+                        <label style="color: #cc0000; font-size: 14px; margin-bottom: 12px;">Emergency Contact (Different from Parents)</label>
+                        <div class="form-group row">
+                            <div>
+                                <label>Name</label>
+                                <input type="text" name="emergency_name" required>
+                            </div>
+                            <div>
+                                <label>Phone Number</label>
+                                <input type="tel" name="emergency_phone" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section D -->
+                <div class="form-section">
+                    <h2>Section D: Medical Information</h2>
+                    <div class="form-group row">
+                        <div>
+                            <label>Family Doctor's Name</label>
+                            <input type="text" name="doctor_name">
+                        </div>
+                        <div>
+                            <label>Doctor's Telephone</label>
+                            <input type="tel" name="doctor_phone">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div>
+                            <label>Asthma/Inhaler Status</label>
+                            <div class="radio-group" id="asthma-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="asthma" value="Yes" id="asthma-yes" required>
+                                    <label for="asthma-yes">Yes (requires inhaler)</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="asthma" value="No" id="asthma-no">
+                                    <label for="asthma-no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label>Is Your NHIS Card Active?</label>
+                            <div class="radio-group" id="nhis-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="nhis" value="Yes" id="nhis-yes" required>
+                                    <label for="nhis-yes">Yes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="nhis" value="No" id="nhis-no">
+                                    <label for="nhis-no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>NHIS Card Number (If any)</label>
+                        <input type="text" name="nhis_number" placeholder="Enter your card number">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Other Needs (Learning, behavioral, physical difficulties)</label>
+                        <textarea name="other_needs" placeholder="If none, type 'None'"></textarea>
+                    </div>
+                </div>
+
+                <!-- Final Agreement -->
+                <div class="form-section">
+                    <h2>Agreements &amp; Policies</h2>
+                    <p style="font-size: 13px; color: #555; margin-bottom: 15px; line-height: 1.7;">
+                        By checking the box below, you agree to the Aslin Fashion School's policies including:<br>
+                        <strong>Refund Policy:</strong> No payments done can be refunded.
+                    </p>
+
+                    <div class="form-group" style="margin-top: 10px; padding: 20px; background: #fafafa; border-radius: 10px; border: 1px solid #eee;">
+                        <label style="color: #cc0000; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px;">Select Your Admission Batch</label>
+                        <div class="radio-group" style="flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 5px;">
+                            <div class="radio-item" style="width: 100%;">
+                                <input type="radio" id="batch-1" name="admission_batch" value="1st Batch (18th June 2026)" required>
+                                <label for="batch-1">1st Batch: 18th June 2026</label>
+                            </div>
+                            <div class="radio-item" style="width: 100%;">
+                                <input type="radio" id="batch-2" name="admission_batch" value="2nd Batch (20th July 2026)">
+                                <label for="batch-2">2nd Batch: 20th July 2026</label>
+                            </div>
+                            <div class="radio-item" style="width: 100%;">
+                                <input type="radio" id="batch-3" name="admission_batch" value="3rd Batch (18th August 2026)">
+                                <label for="batch-3">3rd Batch: 18th August 2026</label>
+                            </div>
+                            <div class="radio-item" style="width: 100%;">
+                                <input type="radio" id="batch-late" name="admission_batch" value="Late Admission (12th January 2027)">
+                                <label for="batch-late">Late Admission: 12th January 2027</label>
+                            </div>
+                        </div>
+                        <p style="font-size: 13px; color: #cc0000; margin: 14px 0 0; font-weight: 600;">
+                            NOTE: Remember to download the form and bring it to school when coming.
+                        </p>
+                    </div>
+
+                    <div class="checkbox-group" id="agreement-container" style="margin-top: 18px;">
+                        <div class="checkbox-item" style="width:100%;">
+                            <input type="checkbox" id="agreement" name="agreement" required>
+                            <label for="agreement">I agree to the Code of Behavior and Financial Responsibilities.</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="submit-wrapper">
+                    <button type="button" class="btn full-width" id="btn-submit">Submit Application</button>
+                </div>
+
+                <div id="read-only-msg" class="hidden"
+                    style="text-align:center; color:#cc0000; margin-top:20px; font-weight:bold; font-size: 14px;">
+                    This form is in Read-Only Mode. Edits are disabled.
+                </div>
+            </form>
+        </div>
+
+        <!-- FOOTER STRIP -->
+        <div class="form-footer">
+            &copy; 2026 <span>Aslin Fashion School</span> &mdash; All Rights Reserved
+        </div>
+
+    </div>
+
+    <!-- Firebase SDKs (v8 Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <!-- html2pdf.js for dynamic PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script src="pins.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

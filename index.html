@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aslin Fashion School</title>
+    <meta name="description" content="Aslin Fashion School - Premier Dressmaking and Fashion Design in Kumasi">
+    <link rel="stylesheet" href="style.css?v=2">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- External Libraries for Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+    <div class="glow-background">
+        <div class="glow-circle"></div>
+        <div class="glow-circle"></div>
+        <div class="glow-circle"></div>
+    </div>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="logo.jpg" alt="GFA Logo" class="nav-logo">
+                <span class="logo-text">Aslin Fashion School</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-item active" data-target="home-section">Home</a></li>
+                <li><a href="#about" class="nav-item" data-target="about-section">About</a></li>
+                <li><a href="#courses" class="nav-item" data-target="courses-section">Courses</a></li>
+                <li><a href="#admissions" class="nav-item" data-target="admissions-section">Admissions</a></li>
+                <li><a href="#gallery" class="nav-item" data-target="gallery-section">Gallery</a></li>
+                <li><a href="#student-portal" class="nav-item" data-target="student-login-section">Student Portal</a>
+                </li>
+                <li><a href="#admin-portal" class="nav-item" data-target="admin-login-section">Admin</a></li>
+            </ul>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- Home Section -->
+        <section id="home-section" class="page-section active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Aslin Fashion School</h1>
+                    <p class="hero-subtitle">Shaping the Future of Fashion since 1994</p>
+                    <button class="cta-button primary-btn" onclick="navigateTo('admissions-section')">Enroll
+                        Now</button>
+                </div>
+            </div>
+
+            <!-- Welcome Message -->
+            <div class="container">
+                <div class="welcome-container glass-card">
+                    <div class="welcome-badge">Akwaaba!</div>
+                    <h2>Welcome to Our Community</h2>
+                    <p class="welcome-text">
+                        We are delighted to have you here! Whether you are a prospective student looking to start your
+                        creative journey or a returning member of our community, we welcome you with open arms. At GFA,
+                        we don't just teach fashion; we cultivate talent and shape the future of African design. Explore
+                        our courses, view our gallery, and join a tradition of excellence that spans over three decades.
+                    </p>
+                    <div class="welcome-footer">
+                        <span>~ Management, GFA</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about-section" class="page-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Our History</h2>
+                    <div class="divider"></div>
+                </div>
+                <div class="about-content glass-card">
+                    <p>Aslin Fashion School is a renowned fashion training institute that is located within Kumasi the Ashanti Region of Ghana. Precisely, the school is on the Kwadaso market road, Papa Kwasi Junction and opposite the Kwadaso Methodist Retreat Centre. The institution was founded by Mrs. Linda Ofosuhene (maiden name “Osei Asibey Bonsu”) in the year 2020 and currently, she holds a Masters degree in Fashion and Textiles Design. Mrs. Linda is also an accredited facilitator of TVET and now assumes the position as Chief Executive Officer of the School. Together with her husband Mr. Samuel Ofosuhene, who has been one of the major pillars and a backbone to the institution in all these years has worked together and been able to make it possible for the training centre to presently increase its admissions to a lot of Ghanaians.
+
+                        Aslin Fashion School is a private technical vocational educational training institute (falls under the second cycle division category of schools) that seeks to provide knowledge and skills in Fashion Design to the youth in Ghana. Apparently, the training institute has been expanded to accommodate close to 100 students during each session of studies. Aslin fashion training Centre has duly registered and applied for accreditation from the Commission for Technical and Vocational Education and Training (CTVET) and is waiting for approval from the said Agency..</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Courses Section -->
+        <section id="courses-section" class="page-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Our Curriculum</h2>
+                    <div class="divider"></div>
+                </div>
+                <div class="courses-grid">
+                    <div class="course-card glass-card">
+                        <h3><i class="fas fa-book-open"></i> General Courses</h3>
+                        <ul>
+                            <li>Branding</li>
+                            <li>Leadership</li>
+                            <li>Marketing</li>
+                        </ul>
+                    </div>
+                    <div class="course-card glass-card">
+                        <h3><i class="fas fa-cut"></i> Year One Focus</h3>
+                        <ul>
+                            <li>Garment Construction & Design</li>
+                            <li>Dress Making (Ladies Wear)</li>
+                            <li>Tailoring (Men's Wear)</li>
+                            <li>Millinery</li>
+                            <li>Bead Making</li>
+                            <li>Occasional Wear</li>
+                            <li>Modeling</li>
+                        </ul>
+                    </div>
+                    <div class="course-card glass-card">
+                        <h3><i class="fas fa-crown"></i> Year Two Masterclass</h3>
+                        <ul>
+                            <li>Wedding Gown</li>
+                            <li>Suit Making</li>
+                            <li>Boning</li>
+                            <li>Batik Making</li>
+                            <li>Decoration</li>
+                            <li>Tie and Dye</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admissions Section -->
+        <section id="admissions-section" class="page-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Admissions</h2>
+                    <div class="divider"></div>
+                </div>
+
+                <div class="admissions-container">
+                    <!-- Row 1: Admission Process (Image Left) -->
+                    <div class="admission-row">
+                        <div class="admission-image-col">
+                            <img src="aslin gallery/IMG_8708.JPG" alt="Admission Process"
+                                class="admission-row-img">
+                        </div>
+                        <div class="admission-content-col">
+                            <div class="admission-intro glass-card">
+                                <h3>Admission Process</h3>
+                                <p>We appreciate your interest in our institution. We are excited to introduce you to
+                                    the Aslin Fashion School community, and our website is a terrific location to
+                                    learn more about everything we have to offer.</p>
+
+                                <h4>How to get the forms:</h4>
+                                <ol>
+                                    <li>Purchase application form at the front desk of the school.</li>
+                                    <li>Pay through Via Momo <strong>0509598140</strong> (Aslin Fashion School).
+                                        Send a screenshot to 0509598140 of Momo transaction.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Cost & Payments (Image Right) -->
+                    <div class="admission-row reverse">
+                        <div class="admission-image-col">
+                            <img src="aslin gallery/IMG_8709.JPG" alt="Cost & Payments"
+                                class="admission-row-img">
+                        </div>
+                        <div class="admission-content-col">
+                            <div class="fees-table-container glass-card">
+                                <h3>Cost & Payments</h3>
+                                <table class="fees-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ITEMS</th>
+                                            <th>COST (GHC)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Application Form</td>
+                                            <td>90.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tuition Fees</td>
+                                            <td>4,000.00 / YEAR</td>
+                                        </tr>
+                                        <tr>
+                                            <td>SRC Dues</td>
+                                            <td>200.00 per Semester</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Miscellaneous</td>
+                                            <td>500.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Maintenance</td>
+                                            <td>50.00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Important Notice (Image Left) -->
+                    <div class="admission-row">
+                        <div class="admission-image-col">
+                            <img src="aslin gallery/IMG_8710.JPG" alt="Important Notice"
+                                class="admission-row-img">
+                        </div>
+                        <div class="admission-content-col">
+                            <div class="important-notice glass-card alert-box">
+                                <h3><i class="fas fa-exclamation-circle"></i> Important Notice</h3>
+                                <p>Application forms should be purchased only at schools premises <strong>(USE THE
+                                        SERIAL NUMBER AND PIN TO FILL THE FORM ON
+                                        Aslinfashionschoolonlineforms.online)</strong></p>
+                                <ul class="notice-list">
+                                    <li>Tuition fee shall be paid every year.</li>
+                                    <li>Fees paid are not refundable.</li>
+                                    <li>Tuition, miscellaneous & maintenance fees must be paid at the office or through
+                                        momo or at the bank.</li>
+                                    <li>Miscellaneous covers school uniform and student ID card.</li>
+                                    <li>You can pay 70% of the tuition (or full amount).</li>
+                                </ul>
+                                <div class="text-center mt-4">
+                                    <a href="gfa%20accra%20forms/index.html" target="_blank"
+                                        class="blue-btn">Fill Form</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery-section" class="page-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Gallery</h2>
+                    <div class="divider"></div>
+                </div>
+                <div class="gallery-grid" id="gallery-container">
+                    <!-- Images will be loaded dynamically via JS -->
+                </div>
+            </div>
+        </section>
+        <!-- Main Footer -->
+        <footer id="main-footer" class="site-footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <img src="logo.jpg" alt="GFA Logo" class="footer-logo">
+                        <div class="footer-title">Aslin Fashion School</div>
+                        <p>Empowering the next generation of fashion designers with excellence in education since 1994.
+                        </p>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li><a href="#" onclick="navigateTo('home-section')">Home</a></li>
+                            <li><a href="#" onclick="navigateTo('about-section')">History</a></li>
+                            <li><a href="#" onclick="navigateTo('admissions-section')">Admissions</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-contact">
+                        <h4>Contact info</h4>
+                        <p><i class="fas fa-envelope"></i> generalfashionacademyaccra@gmail.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Kumasi Metropolis, Ghana</p>
+                        <p><i class="fas fa-phone"></i> +233 (0) 244 264 872</p>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2026 Aslin Fashion School. All Rights Reserved. | <a href="#"
+                            onclick="openModal('classrep-modal')"
+                            style="color:var(--accent-gold); text-decoration:none;">Class Rep Portal</a> | <a href="administrator.html"
+                            style="color:var(--accent-gold); text-decoration:none;">Administrator</a></p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Student Login Section -->
+        <section id="student-login-section" class="page-section portal-bg-student">
+            <div class="container">
+                <div class="portal-login-grid">
+                    <div class="portal-info-card">
+                        <h1>Student Portal</h1>
+                        <p>Access your courses, view announcements, and manage your student profile. Registration is
+                            required for all new students.</p>
+                    </div>
+                    <div class="login-container glass-card">
+                        <div class="login-tabs">
+                            <button class="tab-btn active" data-tab="student-login">Login</button>
+                            <button class="tab-btn" data-tab="student-register">Register</button>
+                        </div>
+
+                        <!-- Student Login -->
+                        <div id="student-login" class="login-form active">
+                            <h2>Welcome Back</h2>
+                            <form id="form-student-login">
+                                <div class="form-group">
+                                    <label>Student Number</label>
+                                    <input type="text" id="student-id-login" required placeholder="GFAXXXXX">
+                                </div>
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input type="password" id="student-password" required
+                                        placeholder="Enter your password">
+                                </div>
+                                <button type="submit" class="submit-btn primary-btn">Login to Portal</button>
+                                <div id="student-login-error" class="error-msg"></div>
+                            </form>
+                        </div>
+
+                        <!-- Student Register -->
+                        <div id="student-register" class="login-form">
+                            <h2>Join Aslin Fashion School</h2>
+                            <form id="form-student-register">
+                                <div class="form-group-row">
+                                    <div class="form-group">
+                                        <label>First Name</label>
+                                        <input type="text" id="reg-firstname" required placeholder="First Name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Surname</label>
+                                        <input type="text" id="reg-surname" required placeholder="Surname">
+                                    </div>
+                                </div>
+                                <div class="form-group-row">
+                                    <div class="form-group">
+                                        <label>Other Name</label>
+                                        <input type="text" id="reg-othername" placeholder="Other Name (Optional)">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Gender</label>
+                                        <select id="reg-gender" required>
+                                            <option value="">Select Gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group-row">
+                                    <div class="form-group">
+                                        <label>Level</label>
+                                        <select id="reg-level" required>
+                                            <option value="">Select Level</option>
+                                            <option value="100">Level 100</option>
+                                            <option value="200">Level 200</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Phone Number</label>
+                                        <input type="tel" id="reg-phone" required placeholder="e.g. 024XXXXXXX">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="reg-email" required placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input type="password" id="reg-password" required placeholder="Create password">
+                                </div>
+                                <div class="form-group">
+                                    <label>Passport Picture</label>
+                                    <input type="file" id="reg-passport" accept="image/*" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Boarding Status</label>
+                                    <div class="radio-group">
+                                        <label class="radio-label"><input type="radio" name="boarding-status"
+                                                value="boarder" required> Boarder</label>
+                                        <label class="radio-label"><input type="radio" name="boarding-status"
+                                                value="day"> Day Student</label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="submit-btn primary-btn">Create Account</button>
+                                <div id="student-reg-error" class="error-msg"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Login Section -->
+        <section id="admin-login-section" class="page-section portal-bg-admin">
+            <div class="container">
+                <div class="admin-login-card glass-card">
+                    <div class="admin-icon"><i class="fas fa-user-shield"></i></div>
+                    <h2>Administrative Access</h2>
+                    <p>Enter the admin password only.</p>
+                    <form id="form-admin-login">
+                        <div class="form-group">
+                            <label>Admin Password</label>
+                            <input type="password" id="admin-password" required placeholder="Enter secure password">
+                        </div>
+                        <button type="submit" class="submit-btn admin-btn">Authorize Access</button>
+                        <div id="admin-login-error" class="error-msg"></div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Portal Section -->
+        <section id="admin-section" class="page-section portal-section">
+            <div class="portal-sidebar">
+                <div class="portal-brand">
+                    <img src="logo.jpg" alt="Logo" class="sidebar-logo">
+                    <span>Admin Panel</span>
+                </div>
+                <ul class="portal-nav">
+                    <li class="active" data-admin-tab="dashboard"><i class="fas fa-chart-line"></i> Dashboard</li>
+                    <li data-admin-tab="students"><i class="fas fa-users"></i> Manage Students</li>
+                    <li data-admin-tab="hostel-admin"><i class="fas fa-hotel"></i> Hostel Management</li>
+                    <li data-admin-tab="payments"><i class="fas fa-money-bill-wave"></i> Payments</li>
+                    <li data-admin-tab="announcements"><i class="fas fa-bullhorn"></i> Announcements</li>
+                    <li data-admin-tab="complaints"><i class="fas fa-envelope-open-text"></i> Student Complaints</li>
+                    <li data-admin-tab="classrep-reports"><i class="fas fa-clipboard-check"></i> Class Rep Info</li>
+                    <li data-admin-tab="attachments"><i class="fas fa-file-alt"></i> Shop Attachments</li>
+                    <li data-admin-tab="accra-forms"><i class="fas fa-file-invoice"></i> Form</li>
+                    <li onclick="logout()"
+                        style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;"><i
+                            class="fas fa-sign-out-alt"></i> Logout</li>
+                </ul>
+            </div>
+            <div class="portal-content">
+                <!-- Dashboard Tab -->
+                <div id="admin-dashboard-tab" class="admin-tab-content active">
+                    <div class="student-welcome-banner glass-card"
+                        style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);">
+                        <div class="welcome-text">
+                            <h2>Academy Overview</h2>
+                            <p>Real-time data and administrative insights for GFA.</p>
+                        </div>
+                        <div class="welcome-status-badge">
+                            <i class="fas fa-user-shield"></i> Administrator
+                        </div>
+                    </div>
+
+                    <div class="stats-grid mb-5">
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+                            <div class="stat-details">
+                                <h4 id="stat-total-students">0</h4>
+                                <span>Total Students</span>
+                            </div>
+                        </div>
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon"><i class="fas fa-bed"></i></div>
+                            <div class="stat-details">
+                                <h4 id="stat-boarding">0</h4>
+                                <span>Boarding Students</span>
+                            </div>
+                        </div>
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon"><i class="fas fa-sun"></i></div>
+                            <div class="stat-details">
+                                <h4 id="stat-day">0</h4>
+                                <span>Day Students</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid mt-4">
+                        <div class="dashboard-card glass-card">
+                            <div class="card-header">
+                                <i class="fas fa-hotel"></i>
+                                <h3>Hostel Status</h3>
+                            </div>
+                            <div class="p-3">
+                                <p class="text-muted">Currently managing student accommodations.</p>
+                                <div style="margin-top: 15px;">
+                                    <button class="primary-btn small-btn" data-admin-tab="hostel-admin"
+                                        onclick="switchAdminTab('hostel-admin')">View Hostel List</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard-card glass-card">
+                            <div class="card-header">
+                                <i class="fas fa-money-check-alt"></i>
+                                <h3>Finance Overview</h3>
+                            </div>
+                            <div class="p-3">
+                                <p class="text-muted">Track payments and academy revenue.</p>
+                                <div style="margin-top: 15px;">
+                                    <button class="primary-btn small-btn" onclick="switchAdminTab('payments')">Manage
+                                        Payments</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Students Tab -->
+                <div id="admin-students-tab" class="admin-tab-content">
+                    <div class="flex-between mb-4">
+                        <h2>Manage Students</h2>
+                        <div>
+                            <button class="primary-btn small-btn" onclick="openModal('add-student-modal')">Add
+                                Student</button>
+                        </div>
+                    </div>
+
+                    <!-- Level Stats Boxes -->
+                    <div class="stats-grid mb-4">
+                        <div class="stat-card glass-card" onclick="filterStudents('100')"
+                            style="border-left: 4px solid var(--accent-gold); cursor:pointer;">
+                            <div class="stat-icon"><i class="fas fa-layer-group"></i></div>
+                            <div class="stat-details">
+                                <h4 id="stat-level-100">0</h4>
+                                <span>Level 100 Students</span>
+                                <small>Click to Filter</small>
+                            </div>
+                        </div>
+                        <div class="stat-card glass-card" onclick="filterStudents('200')"
+                            style="border-left: 4px solid var(--primary-blue); cursor:pointer;">
+                            <div class="stat-icon"><i class="fas fa-medal"></i></div>
+                            <div class="stat-details">
+                                <h4 id="stat-level-200">0</h4>
+                                <span>Level 200 Students</span>
+                                <small>Click to Filter</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex-between mb-4">
+                        <div class="search-box"
+                            style="padding: 0; width: 350px; display: flex; align-items: center; border-radius: 8px; overflow: hidden; background: #fff; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <i class="fas fa-search" style="padding: 0 1rem; color: var(--primary-blue);"></i>
+                            <input type="text" id="admin-student-search" placeholder="Search name or ID..."
+                                onkeyup="filterStudents(currentLevelFilter)"
+                                style="background: transparent; border: none; color: var(--text-dark); padding: 0.8rem 1rem 0.8rem 0; width: 100%; outline: none;">
+                        </div>
+                        <div id="admin-filter-indicator" style="font-weight:600; color:var(--primary-blue);"></div>
+                        <button id="btn-clear-filter" class="small-btn"
+                            style="display:none; background:none; color:#dc3545; border:1px solid #dc3545; border-radius:20px;"
+                            onclick="filterStudents('all')">Show All Students</button>
+                    </div>
+                    <div class="table-responsive glass-card">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Course</th>
+                                    <th>Level</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-students-list">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Hostel Admin Tab -->
+                <div id="admin-hostel-admin-tab" class="admin-tab-content">
+                    <div class="flex-between mb-4">
+                        <h2>Hostel Management</h2>
+                        <div class="stats-summary">
+                            <span class="badge"
+                                style="background:#28a745; color:white; padding:5px 15px; border-radius:20px;">Total
+                                Bookings: <span id="admin-hostel-total">0</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Room Occupancy Grid -->
+                    <div class="section-header-mini mb-3">
+                        <h3>Room Occupancy Overview</h3>
+                        <p class="text-muted">Click a room to see the students assigned to it.</p>
+                    </div>
+                    <div id="admin-hostel-occupancy-grid" class="hostel-grid mb-5">
+                        <!-- Populated dynamically: Hostel -> Room -> Student Names -->
+                    </div>
+
+                    <div class="section-header-mini mb-3">
+                        <h3>Detailed Booking List</h3>
+                    </div>
+                    <div class="table-responsive glass-card">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Student ID</th>
+                                    <th>Hostel</th>
+                                    <th>Room Number</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-hostel-list">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Payments Tab -->
+                <div id="admin-payments-tab" class="admin-tab-content">
+                    <div class="flex-between mb-4">
+                        <h2>Payment Records</h2>
+                        <div style="display:flex; gap:15px; align-items:center;">
+                            <div class="stat-card glass-card" style="padding: 10px 20px;">
+                                <div class="stat-details">
+                                    <h4 id="stat-payment-total" style="font-size: 1.5rem; color: var(--accent-gold);">GHC 0.00</h4>
+                                    <span>Total Collected (Selected Date)</span>
+                                </div>
+                            </div>
+                            <input type="date" id="admin-payment-date-search" onchange="loadAdminData()" style="padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px;">
+                            <button class="primary-btn small-btn" onclick="openModal('add-payment-modal')">Record Payment</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive glass-card">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Type</th>
+                                    <th>Amount (GHC)</th>
+                                    <th>Date</th>
+                                    <th>Method</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-payments-list">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Announcements Tab -->
+                <div id="admin-announcements-tab" class="admin-tab-content">
+                    <div class="section-header-mini mb-4">
+                        <h2>Broadcasting & Announcements</h2>
+                        <p>Write a message here to instantly update all student portals.</p>
+                    </div>
+
+                    <!-- Direct Compose Area -->
+                    <div class="glass-card mb-5 compose-announcement">
+                        <form id="form-add-announcement">
+                            <div class="form-group">
+                                <label>Announcement Title</label>
+                                <input type="text" id="ann-title" required
+                                    placeholder="e.g. Holiday Notice, Exam Dates...">
+                            </div>
+                            <div class="form-group">
+                                <label>Your Message</label>
+                                <textarea id="ann-message" required rows="4"
+                                    placeholder="Type the information you want to share with students..."></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn admin-btn"><i class="fas fa-paper-plane"></i> Post
+                                to Student Portal</button>
+                        </form>
+                    </div>
+
+                    <div class="section-header-mini mb-3">
+                        <h3>Previous Announcements</h3>
+                    </div>
+                    <div class="glass-card" style="padding: 20px;">
+                        <div id="admin-announcements-list" class="announcement-list-admin">
+                            <!-- Populated dynamically -->
+                            <p class="text-muted">No announcements yet.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Complaints Tab -->
+                <div id="admin-complaints-tab" class="admin-tab-content">
+                    <h2>Student Complaints & Feedback</h2>
+                    <p class="text-muted mb-4">View and manage feedback received from students.</p>
+                    <div id="admin-complaints-list">
+                        <!-- Populated dynamically -->
+                        <p class="text-muted">No complaints yet.</p>
+                    </div>
+                </div>
+
+                <!-- Class Rep Info Tab -->
+                <div id="admin-classrep-reports-tab" class="admin-tab-content">
+                    <div class="flex-between mb-4">
+                        <h2>Class Rep Communications</h2>
+                    </div>
+
+                    <div class="section-header-mini mb-3">
+                        <h3>Messages & Reports</h3>
+                        <p class="text-muted">General reports and requests from Class Reps.</p>
+                    </div>
+                    <div id="admin-classrep-reports-list" class="mb-5">
+                        <!-- Populated dynamically -->
+                        <p class="text-muted">No information received yet.</p>
+                    </div>
+
+                    <div class="section-header-mini mb-3">
+                        <h3>Saved Attendance Registers</h3>
+                        <p class="text-muted">View and manage daily attendance sessions saved by Class Reps.</p>
+                    </div>
+                    <div id="admin-attendance-snapshots-list" class="courses-curriculum-grid">
+                        <!-- Populated dynamically from attendance_snapshots -->
+                        <p class="text-muted">No saved registers found.</p>
+                    </div>
+                </div>
+
+                <!-- Shop Attachments Tab -->
+                <div id="admin-attachments-tab" class="admin-tab-content">
+                    <h2>Student Shop Attachments</h2>
+                    <p class="text-muted mb-4">View and manage shop attachment details submitted by students.</p>
+                    <div class="table-responsive glass-card">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Shop Name</th>
+                                    <th>Location</th>
+                                    <th>Owner Phone</th>
+                                    <th>Date Submitted</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-attachments-list">
+                                <!-- Populated dynamically -->
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">No attachments found.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Admission Forms Tab -->
+                <div id="admin-accra-forms-tab" class="admin-tab-content">
+                    <div class="flex-between mb-4">
+                        <h2>Admission Forms</h2>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="search-box"
+                                style="padding: 0; width: 350px; display: flex; align-items: center; border-radius: 8px; overflow: hidden; background: #fff; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                <i class="fas fa-search" style="padding: 0 1rem; color: var(--primary-blue);"></i>
+                                <input type="text" id="admin-accra-search"
+                                    placeholder="Search applicant, serial or batch..." onkeyup="filterAccraForms()"
+                                    style="background: transparent; border: none; color: var(--text-dark); padding: 0.8rem 1rem 0.8rem 0; width: 100%; outline: none;">
+                            </div>
+                            <button class="primary-btn small-btn" onclick="location.reload()"><i
+                                    class="fas fa-sync"></i> Refresh</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive glass-card">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Applicant Name</th>
+                                    <th>Batch</th>
+                                    <th>Branch</th>
+                                    <th>Serial</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-accra-forms-list">
+                                <!-- Populated dynamically -->
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">No submitted forms found.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Student Portal Section -->
+        <section id="student-section" class="page-section portal-section">
+            <div class="portal-sidebar">
+                <div class="portal-brand">
+                    <img src="logo.jpg" alt="Logo" class="sidebar-logo">
+                    <span>GFA</span>
+                </div>
+                <div class="student-profile-mini">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="st-portal-name">Student Name</span>
+                </div>
+                <ul class="portal-nav">
+                    <li class="active" data-student-tab="dashboard"><i class="fas fa-home"></i> Home</li>
+                    <li data-student-tab="courses"><i class="fas fa-book"></i> Course Registration</li>
+                    <li data-student-tab="hostel"><i class="fas fa-hotel"></i> Hostel Booking</li>
+                    <li data-student-tab="payments"><i class="fas fa-receipt"></i> Payments</li>
+                    <li data-student-tab="announcements"><i class="fas fa-bullhorn"></i> Announcements</li>
+                    <li data-student-tab="attachment"><i class="fas fa-paperclip"></i> Attachment</li>
+                    <li data-student-tab="support"><i class="fas fa-headset"></i> Support & Complaints</li>
+                    <li onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</li>
+                </ul>
+            </div>
+            <div class="portal-content">
+                <!-- Dashboard Tab -->
+                <div id="student-dashboard-tab" class="student-tab-content active">
+                    <div class="student-welcome-banner glass-card"
+                        style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);">
+                        <div class="welcome-text">
+                            <h2>Welcome back, <span id="st-welcome-name">Student</span>!</h2>
+                            <p>Here's what's happening with your academic journey today.</p>
+                        </div>
+                        <div class="welcome-status-badge">
+                            <span class="status-dot"></span> Active Student
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid mt-4">
+                        <!-- Profile Card -->
+                        <div class="dashboard-card glass-card profile-info-card">
+                            <div class="card-header">
+                                <i class="fas fa-user-circle"></i>
+                                <h3>Personal Profile</h3>
+                            </div>
+                            <div class="profile-details-grid">
+                                <div class="detail-item">
+                                    <label>First Name</label>
+                                    <span id="st-profile-firstname">...</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Surname</label>
+                                    <span id="st-profile-surname">...</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Other Name</label>
+                                    <span id="st-profile-othername">...</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Gender</label>
+                                    <span id="st-profile-gender">...</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Level</label>
+                                    <span id="st-profile-level">...</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Phone Number</label>
+                                    <span id="st-profile-phone">...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Academic & Status Card -->
+                        <div class="dashboard-card glass-card academic-card">
+                            <div class="card-header">
+                                <i class="fas fa-graduation-cap"></i>
+                                <h3>Academic Status</h3>
+                            </div>
+                            <div class="status-items">
+                                <div class="status-item">
+                                    <div class="status-icon"><i class="fas fa-book"></i></div>
+                                    <div class="status-info">
+                                        <label>Enrolled Course</label>
+                                        <span id="st-profile-course">...</span>
+                                    </div>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-icon"><i class="fas fa-home"></i></div>
+                                    <div class="status-info">
+                                        <label>Boarding Status</label>
+                                        <span id="st-profile-boarding">...</span>
+                                    </div>
+                                </div>
+                                <div class="status-item">
+                                    <div class="status-icon"><i class="fas fa-calendar-check"></i></div>
+                                    <div class="status-info">
+                                        <label>Present in School</label>
+                                        <span id="st-profile-attendance">0 times</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slideshow/Updates Card -->
+                        <div class="dashboard-card glass-card slideshow-card">
+                            <div class="card-header">
+                                <i class="fas fa-images"></i>
+                                <h3>Gallery Highlights</h3>
+                            </div>
+                            <div class="student-slideshow">
+                                <div class="slideshow-container">
+                                    <img id="st-slide-img" src="" alt="Slideshow" class="slide-img">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- History Card -->
+                        <div class="dashboard-card glass-card history-card">
+                            <div class="card-header">
+                                <i class="fas fa-history" style="color: var(--accent-gold);"></i>
+                                <h3>My History & Academic Notes</h3>
+                            </div>
+                            <div id="st-history-list" style="padding: 1rem; max-height: 300px; overflow-y: auto;">
+                                <!-- Populated from Firebase -->
+                                <div class="text-center py-4">
+                                    <i class="fas fa-spinner fa-spin"
+                                        style="color: var(--primary-blue); font-size: 1.5rem;"></i>
+                                    <p class="text-muted mt-2">Loading your history...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Courses Tab (Registration) -->
+                <div id="student-courses-tab" class="student-tab-content">
+                    <div class="flex-between mb-4">
+                        <h2>Course Registration</h2>
+                        <div id="course-reg-status-badge"></div>
+                    </div>
+
+                    <div id="course-registration-container" class="glass-card" style="padding: 2rem;">
+                        <div id="course-reg-info">
+                            <h3 id="reg-level-title">Level Registration</h3>
+                            <p class="text-muted mb-4">Please confirm your registration for this level's core
+                                curriculum.</p>
+                        </div>
+
+                        <div id="courses-to-register-list" class="courses-curriculum-grid mb-4">
+                            <!-- Populated dynamically based on level -->
+                        </div>
+
+                        <button id="btn-register-courses" class="cta-button primary-btn"
+                            style="width: 100%; display:none;" onclick="registerStudentCourses()">
+                            <i class="fas fa-file-signature"></i> Register for Level <span id="reg-level-num"></span>
+                            Courses
+                        </button>
+
+                        <div id="already-registered-msg" class="alert-box"
+                            style="display:none; padding: 1.5rem; border-left-color: #28a745; background: #e8f5e9;">
+                            <h4 style="color: #28a745;"><i class="fas fa-check-circle"></i> Registration Complete</h4>
+                            <p id="registered-courses-summary" style="margin-top: 10px;"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hostel Booking Tab -->
+                <div id="student-hostel-tab" class="student-tab-content">
+                    <div class="flex-between mb-4">
+                        <h2>Hostel Accommodation</h2>
+                        <div id="hostel-status-badge"></div>
+                    </div>
+
+                    <div id="hostel-booking-container" class="glass-card" style="padding: 2rem;">
+                        <div id="hostel-info-box">
+                            <h3>Apply for Accommodation</h3>
+                            <p class="text-muted mb-4">Select your preferred hostel and room. Note that space is subject
+                                to availability.</p>
+
+                            <div class="hostel-selection-form">
+                                <div class="form-group mb-3">
+                                    <label>Select Hostel</label>
+                                    <select id="hostel-select" class="form-control" onchange="updateRoomOptions()">
+                                        <option value="">-- Choose Hostel --</option>
+                                        <option value="Atta Kusi">Atta Kusi</option>
+                                        <option value="Adomako">Adomako</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label>Select Room</label>
+                                    <select id="room-select" class="form-control">
+                                        <option value="">-- Choose Room --</option>
+                                    </select>
+                                </div>
+                                <button id="btn-book-hostel" class="cta-button primary-btn" style="width: 100%;"
+                                    onclick="bookHostelRoom()">
+                                    <i class="fas fa-bed"></i> Book Accommodation
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="hostel-success-box" style="display:none; text-align: center; padding: 2rem;">
+                            <div id="hostel-status-icon" style="font-size: 3rem; color: #f39c12; mb-3;"><i
+                                    class="fas fa-clock"></i></div>
+                            <h3 id="hostel-status-title" style="color: #f39c12;">Request Pending</h3>
+                            <p class="text-muted mt-2" id="hostel-status-msg">Your request is being reviewed by the
+                                administration.</p>
+                            <h4 id="assigned-hostel-details" style="font-size: 1.5rem; margin-top: 1rem;">Hostel Name -
+                                Room X</h4>
+                            <button id="btn-cancel-own-booking" class="small-btn"
+                                style="margin-top:20px; background:#dc3545; color:white; border:none; padding:5px 15px; border-radius:20px; cursor:pointer;"
+                                onclick="cancelMyHostelRequest()">Cancel Request</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payments Tab -->
+                <div id="student-payments-tab" class="student-tab-content">
+                    <h2>Payment History</h2>
+                    <p class="text-muted mb-4">View your recorded school and hostel fee payments.</p>
+
+                    <div class="table-responsive glass-card mt-4">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Amount (GHC)</th>
+                                    <th>Date</th>
+                                    <th>Method</th>
+                                </tr>
+                            </thead>
+                            <tbody id="st-payments-list">
+                                <!-- Populated from Firebase -->
+                                <tr>
+                                    <td colspan="4" class="text-center">No payment records found.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Announcements Tab -->
+                <div id="student-announcements-tab" class="student-tab-content">
+                    <h2>Latest Announcements</h2>
+                    <div class="mt-4" id="st-announcements-list">
+                        <!-- Populated from Firebase -->
+                        <p class="text-muted">Loading announcements...</p>
+                    </div>
+                </div>
+
+                <!-- Support & Complaints Tab -->
+                <div id="student-support-tab" class="student-tab-content">
+                    <h2>Support & Complaints</h2>
+                    <p class="text-muted mb-4">Have a concern or need help? Send us a message directly.</p>
+
+                    <div class="glass-card mt-4" style="padding: 2rem;">
+                        <form id="form-student-complaint">
+                            <div class="form-group">
+                                <label>Subject</label>
+                                <input type="text" id="comp-subject" required
+                                    placeholder="e.g. Course Material Issue, Payment Query">
+                            </div>
+                            <div class="form-group">
+                                <label>Describe your complaint or request</label>
+                                <textarea id="comp-message" required rows="6"
+                                    style="width:100%; border-radius:8px; padding:12px; border:1px solid #ddd; font-family: inherit; font-size: 1rem;"></textarea>
+                            </div>
+                            <button type="submit" class="cta-button primary-btn" style="width: 100%;">
+                                <i class="fas fa-paper-plane"></i> Send Complaint to Management
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="glass-card mt-4" style="border-left: 5px solid var(--accent-gold);">
+                        <p style="font-size: 0.9rem; color: #666;">
+                            <i class="fas fa-info-circle"></i> Note: Your complaint will be sent directly to the
+                            administration dashboard for review.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Attachment Tab -->
+                <div id="student-attachment-tab" class="student-tab-content">
+                    <h2>Shop Attachment Form</h2>
+                    <p class="text-muted mb-4">Please provide details about your shop attachment below.</p>
+
+                    <div class="glass-card mt-4" style="padding: 2rem;">
+                        <form id="form-student-attachment">
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label>Shop Name</label>
+                                    <input type="text" id="att-shop-name" required placeholder="Name of the shop">
+                                </div>
+                                <div class="form-group">
+                                    <label>Town</label>
+                                    <input type="text" id="att-town" required placeholder="Town">
+                                </div>
+                            </div>
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label>Region</label>
+                                    <input type="text" id="att-region" required placeholder="Region">
+                                </div>
+                                <div class="form-group">
+                                    <label>District</label>
+                                    <input type="text" id="att-district" required placeholder="District">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Shop Address (Area Address)</label>
+                                <input type="text" id="att-shop-address" required placeholder="Full area address">
+                            </div>
+                            <div class="form-group">
+                                <label>Shop Owner's Phone Number</label>
+                                <input type="tel" id="att-owner-phone" required placeholder="Phone number">
+                            </div>
+                            <button type="submit" class="cta-button primary-btn" id="btn-submit-attachment"
+                                style="width: 100%;">
+                                <i class="fas fa-save"></i> Submit Attachment Details
+                            </button>
+                        </form>
+
+                        <div id="attachment-success-msg" style="display:none; text-align:center; margin-top:20px;">
+                            <h3 style="color:#28a745;"><i class="fas fa-check-circle"></i> Attachment Details Submitted
+                            </h3>
+                            <p class="text-muted mb-3">You can now download your introductory letter.</p>
+                            <button class="cta-button"
+                                style="background: linear-gradient(135deg, #003366, #004488); color: #FFD700; width: 100%; border: none;"
+                                onclick="downloadAttachmentLetter()">
+                                <i class="fas fa-file-download"></i> Download Introductory Letter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Class Rep Portal Section -->
+        <section id="classrep-section" class="page-section portal-section">
+            <div class="portal-sidebar">
+                <div class="portal-brand">
+                    <img src="logo.jpg" alt="Logo" class="sidebar-logo">
+                    <span>Class Rep</span>
+                </div>
+                <div class="student-profile-mini">
+                    <i class="fas fa-users"></i>
+                    <span id="classrep-portal-name">Level X Rep</span>
+                </div>
+                <div id="classrep-current-date"
+                    style="text-align: center; font-size: 0.9rem; color: #fff; margin-bottom: 20px; font-weight: 600; opacity: 0.9;">
+                    <i class="fas fa-calendar-day" style="margin-right: 5px;"></i> <span
+                        id="cr-date-display">--/--/----</span>
+                </div>
+                <ul class="portal-nav">
+                    <li class="active" data-classrep-tab="dashboard"><i class="fas fa-clipboard-list"></i> Register</li>
+                    <li data-classrep-tab="drafts"><i class="fas fa-edit"></i> Drafts & Progress</li>
+                    <li data-classrep-tab="history"><i class="fas fa-history"></i> Attendance Logs</li>
+                    <li data-classrep-tab="info"><i class="fas fa-info-circle"></i> Information Hub</li>
+                    <li data-classrep-tab="to-admin"><i class="fas fa-envelope"></i> Information to Admin</li>
+                    <li onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</li>
+                </ul>
+            </div>
+            <div class="portal-content">
+                <!-- Dashboard Tab -->
+                <div id="classrep-dashboard-tab" class="classrep-tab-content active">
+                    <div class="student-welcome-banner glass-card"
+                        style="background: linear-gradient(135deg, #1A3C5E 0%, #0A2540 100%);">
+                        <div class="welcome-text">
+                            <h2>Class Register</h2>
+                            <p>Mark attendance and manage your level's records.</p>
+                        </div>
+                        <div class="welcome-status-badge">
+                            <i class="fas fa-users-cog"></i> Class Representative
+                        </div>
+                    </div>
+
+                    <div class="flex-between mb-4 mt-4">
+                        <div>
+                            <p class="text-muted">Currently marking students for Level <span
+                                    id="cr-level-badge">X</span>. <span id="register-status-badge"
+                                    class="status-pill warning"
+                                    style="background:#3498db; color:white; display:none;">Draft Active</span></p>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button id="btn-save-progress" class="primary-btn small-btn" onclick="saveProgress()"
+                                style="background:#3498db; color:white; border:none; padding:8px 15px; border-radius:30px; cursor:pointer; font-weight:600;"><i
+                                    class="fas fa-save"></i> Save Progress</button>
+                            <button id="btn-save-attendance" class="primary-btn small-btn" onclick="saveDayAttendance()"
+                                style="background:#28a745; color:white; border:none; padding:8px 15px; border-radius:30px; cursor:pointer; font-weight:600;"><i
+                                    class="fas fa-check-double"></i> Final Submission</button>
+                            <button class="admin-btn small-btn" onclick="resetClassAttendance()"
+                                style="background:#dc3545; color:white; border:none; padding:8px 15px; border-radius:30px; cursor:pointer; font-weight:600;"><i
+                                    class="fas fa-trash-alt"></i> Reset Register</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive glass-card">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student Number</th>
+                                    <th>Name</th>
+                                    <th>Level</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="classrep-students-list">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Drafts Tab -->
+                <div id="classrep-drafts-tab" class="classrep-tab-content">
+                    <h2>Drafts & In-Progress Registers</h2>
+                    <p class="text-muted mb-4">You can resume these registers to finish marking and submit them
+                        completely.</p>
+
+                    <div id="classrep-drafts-list" class="courses-curriculum-grid">
+                        <!-- Populated with draft sessions -->
+                        <p class="text-muted">No active drafts found.</p>
+                    </div>
+                </div>
+
+                <!-- History Tab -->
+                <div id="classrep-history-tab" class="classrep-tab-content">
+                    <div id="history-list-view">
+                        <h2>Attendance Logs</h2>
+                        <p class="text-muted mb-4">Select a session below to view details.</p>
+
+                        <div id="history-sessions-grid" class="courses-curriculum-grid">
+                            <!-- Populated with cards for each saved date -->
+                            <p class="text-muted">Loading logs...</p>
+                        </div>
+                    </div>
+
+                    <div id="history-detail-view" style="display: none;">
+                        <div class="flex-between mb-4">
+                            <div>
+                                <h2 id="snapshot-title">Session Details</h2>
+                                <p id="snapshot-meta" class="text-muted"></p>
+                            </div>
+                            <button class="small-btn" onclick="showHistoryList()"
+                                style="background:#6c757d; color:white; border:none; padding:8px 15px; border-radius:30px; cursor:pointer;"><i
+                                    class="fas fa-arrow-left"></i> Back to Logs</button>
+                        </div>
+
+                        <div class="table-responsive glass-card">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Student ID</th>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="classrep-history-detail-list">
+                                    <!-- Populated on click -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Tab -->
+                <div id="classrep-info-tab" class="classrep-tab-content">
+                    <h2>Information Hub</h2>
+                    <p class="text-muted mb-4">Important resources, duties, and contacts for Class Representatives.</p>
+
+                    <div class="courses-grid">
+                        <div class="course-card glass-card">
+                            <h3><i class="fas fa-exclamation-triangle"></i> Class Rep Duties</h3>
+                            <ul>
+                                <li>Mark attendance daily accurately.</li>
+                                <li>Report persistent absentees to admin.</li>
+                                <li>Ensure the classroom is organized.</li>
+                                <li>Coordinate with instructors for materials.</li>
+                            </ul>
+                        </div>
+                        <div class="course-card glass-card">
+                            <h3><i class="fas fa-calendar-alt"></i> Semester Schedule</h3>
+                            <ul>
+                                <li>Orientation: Week 1</li>
+                                <li>Mid-term Exams: Week 8</li>
+                                <li>Practical Projects: Week 12</li>
+                                <li>Final Examinations: Week 15</li>
+                            </ul>
+                        </div>
+                        <div class="course-card glass-card">
+                            <h3><i class="fas fa-phone-alt"></i> Emergency Contacts</h3>
+                            <ul>
+                                <li>Admin Office: 024 426 4872</li>
+                                <li>HQ Desk: generalfashionacademyaccra@gmail.com</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Information to Admin Tab -->
+                <div id="classrep-to-admin-tab" class="classrep-tab-content">
+                    <h2>Information to Admin</h2>
+                    <p class="text-muted mb-4">Send reports, attendance summaries, or requests directly to the
+                        administration.</p>
+
+                    <div class="glass-card mb-4" style="padding: 2rem;">
+                        <form id="form-classrep-to-admin">
+                            <div class="form-group">
+                                <label>Subject</label>
+                                <input type="text" id="cr-admin-subject" required
+                                    placeholder="e.g. Weekly Attendance Report, Supply Request">
+                            </div>
+                            <div class="form-group">
+                                <label>Message / Information</label>
+                                <textarea id="cr-admin-message" required rows="6"
+                                    style="width:100%; border-radius:8px; padding:12px; border:1px solid #ddd; font-family: inherit; font-size: 1rem;"
+                                    placeholder="Type your detailed information here..."></textarea>
+                            </div>
+                            <button type="submit" class="cta-button primary-btn" style="width: 100%;">
+                                <i class="fas fa-paper-plane"></i> Send Information to Admin
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <!-- Add Student Modal -->
+    <div id="add-student-modal" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close-modal" onclick="closeModal('add-student-modal')">&times;</span>
+            <h2>Register New Student</h2>
+            <form id="form-add-student">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="add-st-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="add-st-email" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="add-st-phone" required>
+                </div>
+                <div class="form-group">
+                    <label>Password (Default: 123456)</label>
+                    <input type="text" id="add-st-password" value="123456" required>
+                </div>
+                <div class="form-group">
+                    <label>Course</label>
+                    <select id="add-st-course" required>
+                        <option value="General Courses">General Courses</option>
+                        <option value="Year One Focus">Year One Focus</option>
+                        <option value="Year Two Masterclass">Year Two Masterclass</option>
+                    </select>
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="add-st-boarding">
+                    <label for="add-st-boarding">Boarding Student</label>
+                </div>
+                <button type="submit" class="submit-btn primary-btn">Register Student</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Payment Modal -->
+    <div id="add-payment-modal" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close-modal" onclick="closeModal('add-payment-modal')">&times;</span>
+            <h2>Record Payment</h2>
+            <form id="form-add-payment">
+                <div class="form-group">
+                    <label>Student</label>
+                    <select id="pay-st-id" required>
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Payment For</label>
+                    <select id="pay-type" required>
+                        <option value="School Fees">School Fees</option>
+                        <option value="Hostel Fee">Hostel Fee</option>
+                        <option value="SRC dues">SRC dues</option>
+                        <option value="Welfare dues">Welfare dues</option>
+                        <option value="Utility bills">Utility bills</option>
+                        <option value="HUniform">Uniform</option>
+                        <option value="Tools">Tools</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Amount (GHC)</label>
+                    <input type="number" id="pay-amount" required>
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="pay-method" required>
+                        <option value="MoMo">MoMo</option>
+                        <option value="Cash">Cash</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="pay-date" required>
+                </div>
+                <button type="submit" class="submit-btn primary-btn">Save Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div id="receipt-modal" class="modal">
+        <div class="modal-content receipt-paper">
+            <span class="close-modal" onclick="closeModal('receipt-modal')">&times;</span>
+            <div class="receipt-header">
+                <img src="logo.jpg" alt="GFA Logo" class="receipt-logo-img">
+                <h3>Aslin Fashion School</h3>
+                <p>Official Payment Receipt</p>
+            </div>
+            <div class="receipt-body">
+                <div class="receipt-row"><span>Receipt No:</span> <strong id="rec-no">#GFA-001</strong></div>
+                <div class="receipt-row"><span>Date:</span> <span id="rec-date">...</span></div>
+                <hr>
+                <div class="receipt-row"><span>Student Name:</span> <span id="rec-student">...</span></div>
+                <div class="receipt-row"><span>Payment Method:</span> <span id="rec-method">...</span></div>
+                <div class="receipt-total">
+                    <span>Total Amount Paid</span>
+                    <h2 id="rec-amount">GHC 0.00</h2>
+                </div>
+            </div>
+            <div class="receipt-footer">
+                <p>Thank you for choosing Aslin Fashion School!</p>
+                <small>Generated for HQ: generalfashionacademyaccra@gmail.com</small>
+                <div class="no-print mt-4">
+                    <button class="primary-btn" onclick="window.print()">Print Receipt</button>
+                    <button class="admin-btn" id="btn-send-hq">Email to HQ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Redundant Announcement Modal Removed - Forms are now directly in the tab -->
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" class="modal lightbox-overlay" onclick="closeModal('lightbox-modal')">
+        <span class="close-lightbox">&times;</span>
+        <img id="lightbox-img" class="lightbox-content">
+    </div>
+
+    <!-- Class Rep Login Modal -->
+    <div id="classrep-modal" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close-modal" onclick="closeModal('classrep-modal')">&times;</span>
+            <h2>Class Rep Login</h2>
+            <div class="classrep-boxes" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button class="primary-btn" style="flex:1;" onclick="showClassrepLogin('100')">Level 100</button>
+                <button class="primary-btn" style="flex:1;" onclick="showClassrepLogin('200')">Level 200</button>
+            </div>
+            <div id="classrep-login-form" style="display:none;">
+                <h3 id="classrep-level-title"></h3>
+                <input type="hidden" id="classrep-level-input">
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="classrep-password" placeholder="Enter class rep password">
+                </div>
+                <button class="submit-btn primary-btn" onclick="loginClassrep()">Login</button>
+                <div id="classrep-error" class="error-msg"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Attendance Detail Modal -->
+    <div id="admin-attendance-detail-modal" class="modal">
+        <div class="modal-content glass-card" style="max-width: 700px;">
+            <span class="close-modal" onclick="closeModal('admin-attendance-detail-modal')">&times;</span>
+            <div class="flex-between mb-4">
+                <div>
+                    <h2 id="adm-snap-title">Session Details</h2>
+                    <p id="adm-snap-meta" class="text-muted"></p>
+                </div>
+            </div>
+            <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adm-snap-list">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-4 text-right">
+                <button class="primary-btn small-btn" onclick="closeModal('admin-attendance-detail-modal')">Close
+                    Window</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Detail Modal (Admin View) -->
+    <div id="student-detail-modal" class="modal">
+        <div class="modal-content glass-card" style="max-width: 800px; width: 95%;">
+            <span class="close-modal" onclick="closeModal('student-detail-modal')">&times;</span>
+            <div class="student-detail-header">
+                <div class="flex-between">
+                    <div>
+                        <h2 id="det-st-name">Student Name</h2>
+                        <p id="det-st-id" style="color: var(--accent-gold); font-weight: 700;">5140101000</p>
+                    </div>
+                    <img id="det-st-pic" src="" alt="Profile"
+                        style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--white);">
+                </div>
+            </div>
+
+            <div class="detail-tabs mt-4">
+                <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="glass-card" style="padding: 1.5rem;">
+                        <h3>Personal Info</h3>
+                        <div class="profile-details-grid" style="grid-template-columns: 1fr;">
+                            <div class="detail-item">
+                                <label>Email</label>
+                                <span id="det-st-email">...</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Phone Number</label>
+                                <span id="det-st-phone">...</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Gender</label>
+                                <span id="det-st-gender">...</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Level</label>
+                                <span id="det-st-level">...</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Boarding Status</label>
+                                <span id="det-st-boarding">...</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Hostel & Room</label>
+                                <span id="det-st-room" style="color: var(--accent-gold); font-weight: 700;">Not
+                                    Booked</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card" style="padding: 1.5rem;">
+                        <h3>Academic Info</h3>
+                        <div class="profile-details-grid" style="grid-template-columns: 1fr;">
+                            <div class="detail-item">
+                                <label>Course</label>
+                                <span id="det-st-course">...</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Registration Date</label>
+                                <span id="det-st-reg-date">...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="payment-history-section mt-5">
+                <h3>Payment History</h3>
+                <div class="table-responsive glass-card" style="padding: 0; margin-top: 1rem;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Amount (GHC)</th>
+                                <th>Method</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="det-st-payments-list">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="student-history-section mt-5">
+                <h3>Student History & Internal Notes</h3>
+                <div class="glass-card mt-3" style="padding: 1.5rem; background: rgba(255,255,255,0.5);">
+                    <div id="det-st-history-list" class="mb-4"
+                        style="max-height: 300px; overflow-y: auto; border-bottom: 1px solid #eee;">
+                        <!-- Populated dynamically -->
+                        <p class="text-muted">No history recorded yet.</p>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label style="font-weight: 600; color: var(--primary-blue);">Add New History/Academic
+                            Note</label>
+                        <textarea id="add-history-text" rows="3"
+                            style="width:100%; border-radius:12px; padding:12px; border:1px solid #cbd5e0; font-family: inherit; margin-top: 8px; background: white;"
+                            placeholder="Type student history or notes here..."></textarea>
+                    </div>
+                    <div class="text-right mt-2">
+                        <button class="primary-btn small-btn" onclick="saveStudentHistory()"
+                            style="background: var(--primary-blue); color: white;"><i class="fas fa-plus"></i> Add to
+                            History</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 text-right" style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="primary-btn small-btn" onclick="downloadStudentData()"
+                    style="background: var(--accent-gold); color: var(--primary-blue);">
+                    <i class="fas fa-download"></i> Download Full Report
+                </button>
+                <button class="primary-btn small-btn" onclick="closeModal('student-detail-modal')">Close
+                    Profile</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Student Report Modal -->
+    <div id="student-report-modal" class="modal">
+        <div class="modal-content"
+            style="max-width: 850px; padding: 0; background: #fff; border-radius: 0; overflow-y: auto; max-height: 90vh; box-shadow: 0 0 50px rgba(0,0,0,0.3);">
+            <div id="printable-report"
+                style="padding: 50px; background: #fff; position: relative; min-height: 1000px; font-family: 'Inter', sans-serif;">
+                <!-- Decorative Watermark -->
+                <div
+                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 8rem; color: rgba(10, 37, 64, 0.03); font-weight: 900; pointer-events: none; white-space: nowrap; text-transform: uppercase;">
+                    Aslin Fashion School</div>
+
+                <!-- Report Header -->
+                <div
+                    style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 4px solid var(--primary-blue); padding-bottom: 20px; margin-bottom: 30px;">
+                    <div style="display: flex; gap: 20px; align-items: center;">
+                        <img src="logo.jpg" alt="GFA Logo" style="width: 100px; height: 100px; object-fit: contain;">
+                        <div>
+                            <h1
+                                style="font-family: 'Playfair Display', serif; color: var(--primary-blue); margin: 0; font-size: 2.2rem; letter-spacing: 1px;">
+                                Aslin Fashion School</h1>
+                            <p
+                                style="color: var(--accent-gold); font-weight: 700; margin: 5px 0 0; letter-spacing: 2px; text-transform: uppercase;">
+                                Official Academic Transcript & Profile</p>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <p style="margin: 0; font-weight: 600; color: #64748b;">Report ID: <span
+                                id="rep-id-display">--</span></p>
+                        <p style="margin: 5px 0 0; font-size: 0.9rem; color: #94a3b8;">Issue Date: <span
+                                id="rep-date-display">--</span></p>
+                    </div>
+                </div>
+
+                <!-- Profile Section -->
+                <div style="display: grid; grid-template-columns: 180px 1fr; gap: 40px; margin-bottom: 40px;">
+                    <div
+                        style="width: 180px; height: 180px; border: 5px solid #f1f5f9; border-radius: 12px; overflow: hidden; background: #f8fafc;">
+                        <img id="rep-pic" src="" alt="Student" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div>
+                        <h2 id="rep-name"
+                            style="font-size: 2.4rem; margin: 0 0 5px; color: var(--primary-blue); font-weight: 800;">
+                            Student Full Name</h2>
+                        <p
+                            style="margin: 0 0 20px; font-size: 1.2rem; color: var(--accent-gold); font-weight: 700; letter-spacing: 1px;">
+                            ID: <span id="rep-sid">GFA-XXXXXX</span></p>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div style="border-bottom: 2px solid #f1f5f9; padding: 10px 0;"><small
+                                    style="color: #64748b; text-transform: uppercase; font-size: 0.75rem; font-weight: 800; letter-spacing: 1px;">Current
+                                    Level</small>
+                                <p id="rep-level"
+                                    style="margin: 5px 0; font-weight: 700; color: #1e293b; font-size: 1.1rem;"></p>
+                            </div>
+                            <div style="border-bottom: 2px solid #f1f5f9; padding: 10px 0;"><small
+                                    style="color: #64748b; text-transform: uppercase; font-size: 0.75rem; font-weight: 800; letter-spacing: 1px;">Gender</small>
+                                <p id="rep-gender"
+                                    style="margin: 5px 0; font-weight: 700; color: #1e293b; font-size: 1.1rem;"></p>
+                            </div>
+                            <div style="border-bottom: 2px solid #f1f5f9; padding: 10px 0;"><small
+                                    style="color: #64748b; text-transform: uppercase; font-size: 0.75rem; font-weight: 800; letter-spacing: 1px;">Boarding
+                                    Status</small>
+                                <p id="rep-boarding"
+                                    style="margin: 5px 0; font-weight: 700; color: #1e293b; font-size: 1.1rem;"></p>
+                            </div>
+                            <div style="border-bottom: 2px solid #f1f5f9; padding: 10px 0;"><small
+                                    style="color: #64748b; text-transform: uppercase; font-size: 0.75rem; font-weight: 800; letter-spacing: 1px;">Email
+                                    Address</small>
+                                <p id="rep-email"
+                                    style="margin: 5px 0; font-weight: 700; color: #1e293b; font-size: 1.1rem;"></p>
+                            </div>
+                            <div style="border-bottom: 2px solid #f1f5f9; padding: 10px 0;"><small
+                                    style="color: #64748b; text-transform: uppercase; font-size: 0.75rem; font-weight: 800; letter-spacing: 1px;">Phone
+                                    Number</small>
+                                <p id="rep-phone"
+                                    style="margin: 5px 0; font-weight: 700; color: #1e293b; font-size: 1.1rem;"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- Financial Statement -->
+                <div style="margin-bottom: 40px;">
+                    <div
+                        style="background: var(--primary-blue); color: #fff; padding: 10px 20px; border-radius: 6px; margin-bottom: 15px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-file-invoice-dollar"></i> FINANCIAL STATEMENT
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f8fafc; text-align: left;">
+                                <th style="padding: 12px; border-bottom: 2px solid #edf2f7;">Date</th>
+                                <th style="padding: 12px; border-bottom: 2px solid #edf2f7;">Description</th>
+                                <th style="padding: 12px; border-bottom: 2px solid #edf2f7;">Method</th>
+                                <th style="padding: 12px; border-bottom: 2px solid #edf2f7; text-align: right;">Amount
+                                    (GHC)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rep-payments-list">
+                            <!-- Payments -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Hostel & Room Section -->
+                <div style="margin-bottom: 40px;">
+                    <div
+                        style="background: #10b981; color: #fff; padding: 10px 20px; border-radius: 6px; margin-bottom: 15px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-hotel"></i> HOSTEL & ROOM
+                    </div>
+                    <div
+                        style="padding: 20px; border: 1px solid #edf2f7; border-radius: 8px; background: #f0fdf4; display: flex; justify-content: space-between;">
+                        <div>
+                            <small
+                                style="color: #15803d; text-transform: uppercase; font-size: 0.7rem; font-weight: 800;">Hostel
+                                Name</small>
+                            <p id="rep-hostel"
+                                style="margin: 5px 0 0; color: #166534; font-weight: 800; font-size: 1.2rem;"></p>
+                        </div>
+                        <div style="text-align: right;">
+                            <small
+                                style="color: #15803d; text-transform: uppercase; font-size: 0.7rem; font-weight: 800;">Room
+                                Number</small>
+                            <p id="rep-room"
+                                style="margin: 5px 0 0; color: #166534; font-weight: 800; font-size: 1.2rem;"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Registered Courses -->
+                <div style="margin-bottom: 40px;">
+                    <div
+                        style="background: #6366f1; color: #fff; padding: 10px 20px; border-radius: 6px; margin-bottom: 15px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-graduation-cap"></i> REGISTERED CURRICULUM
+                    </div>
+                    <div id="rep-courses-list" style="display: flex; flex-wrap: wrap; gap: 10px; padding: 5px;">
+                        <!-- Courses -->
+                    </div>
+                </div>
+
+                <!-- Academic History -->
+                <div style="margin-bottom: 40px;">
+                    <div
+                        style="background: var(--accent-gold); color: var(--primary-blue); padding: 10px 20px; border-radius: 6px; margin-bottom: 15px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-history"></i> ACADEMIC HISTORY & OFFICIAL NOTES
+                    </div>
+                    <div id="rep-history-list" style="border: 1px solid #edf2f7; border-radius: 8px;">
+                        <!-- History -->
+                    </div>
+                </div>
+
+                <!-- Footer / Signatures -->
+                <div style="margin-top: 80px; display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div style="text-align: center;">
+                        <div style="width: 200px; border-bottom: 1px solid #1e293b; margin-bottom: 10px;"></div>
+                        <p style="margin: 0; font-weight: 700; font-size: 0.9rem;">Registrar's Signature</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <p style="margin: 0; font-size: 0.8rem; color: #94a3b8;">This is an official document generated
+                            by GFA Management System.</p>
+                        <p style="margin: 5px 0 0; font-size: 0.8rem; color: #94a3b8; font-style: italic;">Validity can
+                            be verified at the GFA Administration Office.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                style="background: #f8fafc; padding: 20px; border-top: 1px solid #edf2f7; text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="primary-btn small-btn" onclick="downloadAsImage()"
+                    style="background: #10b981; color: #fff;">
+                    <i class="fas fa-image"></i> Download as Image
+                </button>
+                <button class="primary-btn small-btn" onclick="printReport()"
+                    style="background: var(--primary-blue); color: #fff;">
+                    <i class="fas fa-print"></i> Print / Save as PDF
+                </button>
+                <button class="primary-btn small-btn" onclick="closeModal('student-report-modal')"
+                    style="background: #e2e8f0; color: #475569;">
+                    Close Preview
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Detail Modal (Student View) -->
+    <div id="history-detail-modal" class="modal">
+        <div class="modal-content glass-card" style="max-width: 500px;">
+            <span class="close-modal" onclick="closeModal('history-detail-modal')">&times;</span>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div
+                    style="width: 60px; height: 60px; background: rgba(212, 175, 55, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                    <i class="fas fa-history" style="color: var(--accent-gold); font-size: 1.5rem;"></i>
+                </div>
+                <h2 style="font-size: 1.5rem;">Academic Note</h2>
+                <p id="hist-modal-date" class="text-muted" style="font-size: 0.9rem;"></p>
+            </div>
+            <div id="hist-modal-text"
+                style="background: #f8fafc; padding: 20px; border-radius: 12px; line-height: 1.7; color: var(--text-dark); white-space: pre-wrap; margin-bottom: 20px; border: 1px solid #edf2f7;">
+                <!-- Text goes here -->
+            </div>
+            <button class="primary-btn" style="width: 100%;" onclick="closeModal('history-detail-modal')">Close
+                Note</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs (v8 Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script src="accra-admin.js?v=2"></script>
+    <script src="app.js?v=2"></script>
+    <!-- Admission Form Detail Modal -->
+    <div id="accra-form-detail-modal" class="modal">
+        <div class="modal-content glass-card" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+            <span class="close-modal" onclick="closeModal('accra-form-detail-modal')">&times;</span>
+            <div id="accra-form-detail-content">
+                <!-- Content will be populated via JS -->
+            </div>
+            <div
+                style="margin-top: 20px; display: flex; gap: 10px; position: sticky; bottom: 0; background: #fff; padding-top: 10px; border-top: 1px solid #eee;">
+                <button class="primary-btn" style="flex: 1;" onclick="window.printAccraForm()">Print Form</button>
+                <button class="small-btn"
+                    style="background: #dc3545; color: white; border: none; padding: 10px; border-radius: 8px;"
+                    onclick="window.deleteAccraForm()">Delete Form</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
