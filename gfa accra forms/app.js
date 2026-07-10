@@ -61,6 +61,100 @@ function initDatabase() {
     }
 }
 
+function timeoutPromise(promise, ms, defaultValue = null) {
+    return new Promise((resolve) => {
+        const timeoutId = setTimeout(() => {
+            console.warn("Promise timed out after " + ms + "ms");
+            resolve(defaultValue);
+        }, ms);
+        promise.then(
+            (val) => {
+                clearTimeout(timeoutId);
+                resolve(val);
+            },
+            (err) => {
+                clearTimeout(timeoutId);
+                console.warn("Promise rejected:", err);
+                resolve(defaultValue);
+            }
+        );
+    });
+}
+
+async function backendLogin(serial, pin) {
+    try {
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ serial, pin }),
+        });
+        if (!response.ok) {
+            const errData = await response.json().catch(() => null);
+            console.warn('Backend login failed:', errData);
+            return { valid: false };
+        }
+        return await response.json();
+    } catch (error) {
+        console.warn('Backend login request failed:', error);
+        return { valid: false };
+    }
+}
+
+async function backendSubmit(serial, pin, formData) {
+    try {
+        const response = await fetch('/api/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ serial, pin, formData }),
+        });
+        if (!response.ok) {
+            const errData = await response.json().catch(() => null);
+            console.warn('Backend submit failed:', errData);
+            return { success: false, error: (errData && errData.error) || 'Server error' };
+        }
+        return await response.json();
+    } catch (error) {
+        console.warn('Backend submit request failed:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+function firebaseKey(serial) {
+    return (serial || '').toString().trim().toUpperCase().replace(/[^A-Z0-9_-]/g, '_');
+}
+
+async function savePinToFirebase(serial, pin, formData = null) {
+    if (!db) return;
+    try {
+        const key = firebaseKey(serial);
+        await db.ref('pins/' + key).set({ 
+            serial, 
+            pin, 
+            used: true, 
+            formData,
+            updatedAt: new Date().toISOString() 
+        });
+    } catch (error) {
+        console.warn('Firebase pin update failed:', error);
+    }
+}
+
+async function saveAccraFormToFirebase(serial, formData = null) {
+    if (!db) return;
+    try {
+        const key = firebaseKey(serial);
+        const payload = {
+            ...(formData || {}),
+            serial,
+            submittedAt: (formData && formData.submittedAt) || new Date().toISOString(),
+        };
+        await db.ref('accra_forms/' + key).set(payload);
+        console.log('Saved application to admin accra_forms:', key);
+    } catch (error) {
+        console.warn('Firebase admin form save failed:', error);
+    }
+}
+
 // --- AUTO-INITIALIZE ON LOAD ---
 initDatabase();
 
@@ -85,8 +179,11 @@ function setupButtons() {
     const prevSchoolDiv = document.getElementById('previous-school-div');
     const currentSerialInput = document.getElementById('current-serial');
     const passportInputEl = document.getElementById('passport-upload');
+    const previewImg = document.getElementById('preview-img');
+    const previewText = document.getElementById('preview-text');
     const downloadBtn = document.getElementById('btn-download');
     const btnSubmit = document.getElementById('btn-submit');
+    const btnOpenEmail = document.getElementById('btn-open-email');
 
     // Login Button Handler
     if (loginBtn) {
@@ -113,32 +210,80 @@ function setupButtons() {
                 if (!Array.isArray(GFA_DB) || GFA_DB.length === 0) {
                     initDatabase();
                 }
-                let userRecord = GFA_DB.find(u => {
+
+                let localRecord = GFA_DB.find(u => {
                     const dbSerial = (u.serial || "").toString().trim().toUpperCase().replace(/\s+/g, '');
                     const dbPin = (u.pin || "").toString().trim().replace(/\s+/g, '');
                     return dbSerial === serial && dbPin === pin;
                 });
 
-                if (userRecord) {
-                    if (db) {
-                        try {
-                            const snapshot = await db.ref('accra_forms').orderByChild('serial').equalTo(serial).once('value');
-                            if (snapshot.exists()) {
-                                const submissions = snapshot.val();
-                                const submissionId = Object.keys(submissions)[0];
-                                const cloudData = submissions[submissionId];
-                                
-                                userRecord.used = true;
-                                userRecord.formData = cloudData;
-                                userRecord.submittedAt = cloudData.submittedAt || new Date().toISOString();
-                            }
-                        } catch (syncErr) {
-                            console.warn("Cloud sync failed, using local data:", syncErr);
-                        }
+                // Check Firebase first if database is available
+                let firebaseRecord = null;
+                if (db) {
+                    try {
+                        const key = firebaseKey(serial);
+                        const fbPromise = db.ref('pins/' + key).once('value').then(snap => snap.val());
+                        firebaseRecord = await timeoutPromise(fbPromise, 1500, null);
+                    } catch (e) {
+                        console.warn("Firebase pin query failed:", e);
+                    }
+                }
+
+                if (firebaseRecord) {
+                    // Check if the pin matches the entered one
+                    const fbPin = (firebaseRecord.pin || "").toString().trim().replace(/\s+/g, '');
+                    if (fbPin !== pin) {
+                        loginError.innerText = "Invalid Serial Number or PIN. Please check and try again.";
+                        loginError.style.display = 'block';
+                        return;
                     }
 
-                    loginError.style.display = 'none';
-                    openForm(userRecord);
+                    if (firebaseRecord.used) {
+                        localRecord = localRecord || { serial, pin };
+                        localRecord.used = true;
+                        localRecord.formData = firebaseRecord.formData || localRecord.formData;
+                        localRecord.submittedAt = firebaseRecord.updatedAt || firebaseRecord.submittedAt || localRecord.submittedAt;
+                        
+                        loginError.innerText = "This Serial Number and PIN have already been used. You may review the submitted application below.";
+                        loginError.style.display = 'block';
+                        
+                        // Save to local storage cache
+                        let idx = GFA_DB.findIndex(r => r.serial === serial);
+                        if (idx > -1) {
+                            GFA_DB[idx] = localRecord;
+                        } else {
+                            GFA_DB.push(localRecord);
+                        }
+                        try {
+                            localStorage.setItem('gfa_database_v3', JSON.stringify(GFA_DB));
+                        } catch (e) {}
+                        
+                        openForm(localRecord);
+                        return;
+                    }
+                }
+
+                const backendRecord = await backendLogin(serial, pin);
+
+                if (backendRecord.valid && backendRecord.used) {
+                    localRecord = localRecord || { serial, pin, used: true, formData: backendRecord.formData, submittedAt: backendRecord.submittedAt };
+                    localRecord.used = true;
+                    localRecord.formData = backendRecord.formData || localRecord.formData;
+                    localRecord.submittedAt = backendRecord.submittedAt || localRecord.submittedAt;
+                    loginError.innerText = "This Serial Number and PIN have already been used. You may review the submitted application below.";
+                    loginError.style.display = 'block';
+                    openForm(localRecord);
+                } else if (localRecord) {
+                    if (localRecord.used) {
+                        loginError.innerText = "This Serial Number and PIN have already been used. You may review the submitted application below.";
+                        loginError.style.display = 'block';
+                    }
+                    if (backendRecord.valid && backendRecord.formData) {
+                        localRecord.formData = backendRecord.formData;
+                        localRecord.used = backendRecord.used || localRecord.used;
+                        localRecord.submittedAt = backendRecord.submittedAt || localRecord.submittedAt;
+                    }
+                    openForm(localRecord);
                 } else {
                     loginError.innerText = "Invalid Serial Number or PIN. Please check and try again.";
                     loginError.style.display = 'block';
@@ -156,17 +301,20 @@ function setupButtons() {
         console.error("Critical Error: Login button (btn-login) not found!");
     }
 
-    // Submit Button Handler
+    // Submit Handler
     let isSubmitting = false;
-    if (btnSubmit) {
-        btnSubmit.addEventListener('click', () => {
+    if (form) {
+        const handleSubmit = async (e) => {
+            e.preventDefault();
             if (isSubmitting) return;
             if (!form.reportValidity()) return;
 
             isSubmitting = true;
-            btnSubmit.innerText = "Processing...";
-            btnSubmit.style.pointerEvents = "none";
-            btnSubmit.style.opacity = "0.7";
+            if (btnSubmit) {
+                btnSubmit.innerText = "Processing...";
+                btnSubmit.style.pointerEvents = "none";
+                btnSubmit.style.opacity = "0.7";
+            }
 
             const formData = new FormData(form);
             const dataObj = {};
@@ -184,93 +332,83 @@ function setupButtons() {
 
             if (!Array.isArray(GFA_DB) || GFA_DB.length === 0) initDatabase();
 
-            let index = GFA_DB.findIndex(r => r.serial === serial);
+            let index = GFA_DB.findIndex(r => (r.serial || "").toString().trim().toUpperCase() === serial);
+
+            if (index > -1 && GFA_DB[index].used === true) {
+                alert("Already submitted on this device.");
+                openForm(GFA_DB[index]);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                isSubmitting = false;
+                if (btnSubmit) {
+                    btnSubmit.innerText = "Submit Application";
+                    btnSubmit.style.pointerEvents = "auto";
+                    btnSubmit.style.opacity = "1";
+                }
+                return;
+            }
+
+            const submittedAt = new Date().toISOString();
+            if (index > -1) {
+                GFA_DB[index].used = true;
+                GFA_DB[index].formData = dataObj;
+                GFA_DB[index].submittedAt = submittedAt;
+            } else {
+                GFA_DB.push({ serial, pin, used: true, formData: dataObj, submittedAt });
+            }
 
             try {
-                if (index > -1 && GFA_DB[index].used === true) {
-                    alert("Already submitted on this device.");
-                    openForm(GFA_DB[index]);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    btnSubmit.innerText = "Submit Application";
-                    btnSubmit.style.pointerEvents = "auto";
-                    btnSubmit.style.opacity = "1";
-                    isSubmitting = false;
-                    return;
-                }
-
-                const submittedAt = new Date().toISOString();
-                if (index > -1) {
-                    GFA_DB[index].used = true;
-                    GFA_DB[index].formData = dataObj;
-                    GFA_DB[index].submittedAt = submittedAt;
-                } else {
-                    GFA_DB.push({ serial, pin, used: true, formData: dataObj, submittedAt });
-                }
-
-                try {
-                    localStorage.setItem('gfa_database_v3', JSON.stringify(GFA_DB));
-                } catch (e) {
-                    console.warn("Local storage write failed:", e);
-                }
-            } catch (error) {
-                console.warn("Local processing warning:", error);
+                localStorage.setItem('gfa_database_v3', JSON.stringify(GFA_DB));
+            } catch (e) {
+                console.warn("Local storage write failed:", e);
             }
 
-            // Prepare email content
-            let emailBody = `==================================================\n     GFA ADMISSION APPLICATION - OFFICIAL REPORT\n==================================================\n\n`;
-            emailBody += `SERIAL NUMBER    : ${serial}\n`;
-            emailBody += `PREFERRED BRANCH : ${dataObj.preferred_branch || 'N/A'}\n`;
-            emailBody += `ADMISSION BATCH  : ${dataObj.admission_batch || 'N/A'}\n`;
-            emailBody += `SUBMISSION DATE  : ${new Date().toLocaleString()}\n\n`;
-            emailBody += `FULL NAME        : ${dataObj.surname || ''}, ${dataObj.firstname || ''} ${dataObj.othernames || ''}\n`;
-            emailBody += `==================================================\n             END OF APPLICATION REPORT\n==================================================\n`;
-
-            const subject = `GFA Application: ${dataObj.admission_batch || 'Batch'} - ${dataObj.firstname || 'Applicant'} ${dataObj.surname || ''} (${serial})`;
+            const subject = `Aslin Admission: ${dataObj.admission_batch || 'Batch'} - ${dataObj.firstname || 'Applicant'} ${dataObj.surname || ''} (${serial})`;
             const fsSubject = document.getElementById('fs-subject');
             if (fsSubject) fsSubject.value = subject;
-            const fsDetails = document.getElementById('fs-details');
-            if (fsDetails) fsDetails.value = emailBody;
 
-            const submissionRef = db.ref('accra_forms').push();
-            dataObj.id = submissionRef.key;
-            dataObj.submittedAt = new Date().toISOString();
+            dataObj.submittedAt = submittedAt;
             dataObj.serial = serial;
-            
+
             if (db) {
-                submissionRef.set(dataObj).then(() => {
-                    const formDataEmail = new FormData(form);
-                    fetch(form.action, { method: "POST", body: formDataEmail }).catch(e => console.warn("Email service error:", e));
-
-                    if (currentActiveRecord) {
-                        currentActiveRecord.used = true;
-                        currentActiveRecord.formData = dataObj;
-                        currentActiveRecord.submittedAt = dataObj.submittedAt;
-                    } else {
-                        currentActiveRecord = { serial, pin, used: true, formData: dataObj, submittedAt: dataObj.submittedAt };
-                    }
-
-                    formSection.classList.add('hidden');
-                    document.getElementById('success-section').classList.remove('hidden');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    downloadAdmissionLetter();
-                }).catch(err => {
-                    console.error('Firebase error:', err);
-                    alert("Error saving application. Check internet and try again.");
-                    isSubmitting = false;
-                    btnSubmit.innerText = "Submit Application";
-                    btnSubmit.style.pointerEvents = "auto";
-                    btnSubmit.style.opacity = "1";
-                });
-            } else {
-                alert("Database connection is currently unavailable. Please try again in a few minutes.");
-                isSubmitting = false;
-                btnSubmit.innerText = "Submit Application";
-                btnSubmit.style.pointerEvents = "auto";
-                btnSubmit.style.opacity = "1";
+                try {
+                    await savePinToFirebase(serial, pin, dataObj);
+                } catch (fbErr) {
+                    console.warn('Firebase save failed:', fbErr);
+                }
+                try {
+                    await saveAccraFormToFirebase(serial, dataObj);
+                } catch (accraErr) {
+                    console.warn('Firebase admin form save failed:', accraErr);
+                }
             }
-        });
+
+            if (currentActiveRecord) {
+                currentActiveRecord.used = true;
+                currentActiveRecord.formData = dataObj;
+                currentActiveRecord.submittedAt = submittedAt;
+            } else {
+                currentActiveRecord = { serial, pin, used: true, formData: dataObj, submittedAt };
+            }
+
+            const serialInput = document.getElementById('current-serial');
+            if (serialInput) serialInput.value = serial;
+
+            const hiddenPinInput = document.getElementById('hidden-pin');
+            if (hiddenPinInput) hiddenPinInput.value = pin;
+
+            const detailsInput = document.getElementById('fs-details');
+            if (detailsInput) detailsInput.value = JSON.stringify(dataObj, null, 2);
+
+            const fsSubjectInput = document.getElementById('fs-subject');
+            if (fsSubjectInput) fsSubjectInput.value = subject;
+
+            form.removeEventListener('submit', handleSubmit);
+            form.submit();
+        };
+
+        form.addEventListener('submit', handleSubmit);
     } else {
-        console.error("Critical Error: Submit button (btn-submit) not found!");
+        console.error("Critical Error: Admission form not found!");
     }
 
     // Download Button Handler
@@ -280,11 +418,15 @@ function setupButtons() {
         });
     }
 
-    // Form Prevention
-    if (form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            return false;
+    // Email fallback button handler
+    if (btnOpenEmail) {
+        btnOpenEmail.addEventListener('click', () => {
+            const applicantName = `${document.querySelector('input[name="surname"]')?.value || ''} ${document.querySelector('input[name="firstname"]')?.value || ''}`.trim();
+            const applicantEmail = 'aslinfashionschoolonlineforms@gmail.com';
+            const subject = document.getElementById('fs-subject')?.value || 'Aslin Admission Application';
+            const details = document.getElementById('fs-details')?.value || 'Application submitted';
+            const mailtoLink = `mailto:${applicantEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Applicant: ${applicantName}\n\n${details}`)}`;
+            window.open(mailtoLink, '_blank', 'noopener,noreferrer');
         });
     }
 
@@ -687,11 +829,7 @@ function openForm(record) {
             downloadBtn.onclick = () => downloadFilledForm(record);
         }
 
-        const admissionBtnReadonly = document.getElementById('btn-download-admission-readonly');
-        if (admissionBtnReadonly) {
-            admissionBtnReadonly.classList.remove('hidden');
-            admissionBtnReadonly.onclick = () => downloadAdmissionLetter();
-        }
+        // Removed admissionBtnReadonly setup
 
 
     } else {
@@ -781,18 +919,19 @@ function downloadAdmissionLetter() {
     const firstName = studentData.firstname || "Student";
     const surname = studentData.surname || "";
     const otherNames = studentData.othernames || "";
-    const fullName = [firstName, otherNames, surname].filter(Boolean).join(" ");
+    const fullName = [surname.toUpperCase(), firstName, otherNames].filter(Boolean).join(" ");
     const safeName = fullName.replace(/[^A-Za-z0-9 ]/g, "").replace(/\s+/g, "_");
     const address = studentData.contact_address || "N/A";
     const phone = studentData.emergency_phone || studentData.father_phone || studentData.mother_phone || "N/A";
-    
-    // Extract serial suffix
-    const serial = (currentActiveRecord && currentActiveRecord.serial) || studentData['current-serial'] || "GFA-25-084";
+
+    // Extract serial and pin
+    const serial = (currentActiveRecord && currentActiveRecord.serial) || studentData['current-serial'] || "N/A";
+    const pin = (currentActiveRecord && currentActiveRecord.pin) || studentData['gate-pin'] || document.getElementById('hidden-pin')?.value || "N/A";
     const parts = serial.split('-');
-    const serialSuffix = parts[parts.length - 1] || "084";
+    const serialSuffix = parts[parts.length - 1] || "000";
 
     // Dynamic reporting day based on batch
-    let reportingDay = "Thursday, 18th June 2026"; // default fallback
+    let reportingDay = "Thursday, 18th June 2026";
     const batchVal = studentData.admission_batch || "";
     if (batchVal.includes("18th June 2026")) {
         reportingDay = "Thursday, 18th June 2026";
@@ -816,151 +955,253 @@ function downloadAdmissionLetter() {
             default: return "th";
         }
     }
-    const submissionDate = (currentActiveRecord && currentActiveRecord.submittedAt) 
-        ? new Date(currentActiveRecord.submittedAt) 
+    const submissionDate = (currentActiveRecord && currentActiveRecord.submittedAt)
+        ? new Date(currentActiveRecord.submittedAt)
         : new Date();
     const day = submissionDate.getDate();
     const month = submissionDate.toLocaleString('en-GB', { month: 'long' });
     const year = submissionDate.getFullYear();
     const dateStr = `${day}${getOrdinalSuffix(day)} ${month}, ${year}`;
 
-    // check if html2pdf is available
     if (typeof html2pdf !== 'undefined') {
-        console.log("Generating dynamic PDF admission letter for:", fullName);
-        
-        // Create an offline-friendly HTML container
-        const container = document.createElement("div");
-        container.style.position = "absolute";
-        container.style.left = "-9999px";
-        container.style.top = "-9999px";
-        container.style.width = "750px"; // A4 proportion width
-        
-        container.innerHTML = `
-            <div style="font-family: 'Times New Roman', Times, serif; color: #1a202c; line-height: 1.6; padding: 40px 50px; font-size: 15px; background: white;">
-                <!-- Header/Letterhead -->
-                <div style="text-align: center; border-bottom: 2px solid #003366; padding-bottom: 15px; margin-bottom: 25px;">
-                    <div style="width: 80px; height: 80px; margin: 0 auto 12px; border-radius: 50%; background: #003366; border: 3px solid #FFD700; display: flex; align-items: center; justify-content: center; color: #FFD700; font-family: 'Times New Roman', Times, serif; font-weight: bold; font-size: 26px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">GFA</div>
-                    <h1 style="color: #003366; margin: 0; font-size: 26px; text-transform: uppercase; font-family: 'Times New Roman', Times, serif; font-weight: bold; letter-spacing: 1px;">ASLIN FASHION SCHOOL</h1>
-                    <p style="margin: 5px 0 0; font-size: 12px; color: #4a5568; font-weight: bold;">Accra & Kumasi Branches, Ghana | Tel: +233 24 426 4872 / +233 54 344 3983</p>
-                </div>
-                
-                <!-- Ref and Date Block -->
-                <div style="display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 14px;">
-                    <div>
-                        <strong>Our Ref:</strong> GFA/ADM/25/${serialSuffix}<br>
-                        <strong>Your Ref:</strong> .............................
-                    </div>
-                    <div style="text-align: right;">
-                        <strong>Date:</strong> ${dateStr}<br>
-                        <strong>Location:</strong> Kwadaso - Kumasi / Accra
-                    </div>
-                </div>
-                
-                <!-- Addressed to -->
-                <div style="margin-bottom: 25px; font-size: 14px; background: #f8fafc; border-left: 4px solid #003366; padding: 12px 16px;">
-                    <strong>To:</strong><br>
-                    <span style="text-transform: uppercase; font-weight: bold; color: #003366;">${fullName}</span><br>
-                    <span>${address}</span><br>
-                    <span>Tel: ${phone}</span>
-                </div>
-                
-                <!-- Salutation -->
-                <p style="margin-bottom: 20px; font-size: 15px;">Dear ${firstName},</p>
-                
-                <!-- Title -->
-                <h3 style="text-align: center; color: #003366; text-transform: uppercase; border-bottom: 3px double #FFD700; padding-bottom: 8px; margin: 20px 0; font-size: 16px; font-weight: bold; letter-spacing: 0.5px;">OFFER OF PROVISIONAL ADMISSION — 2025/2026 ACADEMIC SESSION</h3>
-                
-                <!-- Letter Body -->
-                <p style="text-align: justify; margin-bottom: 15px; text-indent: 30px;">A warm welcome to ASLIN FASHION SCHOOL! We are thrilled to inform you that you have been successfully selected to join our esteemed institution for the upcoming 2025/2026 academic year. Congratulations on this significant achievement.</p>
-                
-                <p style="text-align: justify; margin-bottom: 15px; text-indent: 30px;">We are excited to share that your academic session will officially commence on <strong>${reportingDay}</strong>. You are requested to report directly to the academy campus on this scheduled date, fully prepared to embark on an incredible, creative journey into the professional world of fashion, design, and garment construction.</p>
-                
-                <p style="text-align: justify; margin-bottom: 15px;">As part of your entry requirements, you are expected to fulfill the primary institutional financial obligations prior to the start of instruction. The breakdown of your core first-year fees is structured as follows:</p>
-                
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px;">
-                    <thead>
-                        <tr style="background-color: #003366; color: white;">
-                            <th style="padding: 8px 12px; text-align: left; border: 1px solid #cbd5e0; font-weight: bold;">Fee Description</th>
-                            <th style="padding: 8px 12px; text-align: right; border: 1px solid #cbd5e0; width: 150px; font-weight: bold;">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding: 8px 12px; border: 1px solid #cbd5e0;">School Fees (Tuition)</td>
-                            <td style="padding: 8px 12px; text-align: right; border: 1px solid #cbd5e0; font-weight: bold;">GH₵ 2,800.00</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px 12px; border: 1px solid #cbd5e0;">Hostel Accommodation Fee</td>
-                            <td style="padding: 8px 12px; text-align: right; border: 1px solid #cbd5e0; font-weight: bold;">GH₵ 1,300.00</td>
-                        </tr>
-                        <tr style="font-weight: bold; background-color: #f7fafc; color: #003366;">
-                            <td style="padding: 8px 12px; border: 1px solid #cbd5e0; text-transform: uppercase;">Total Core Fees</td>
-                            <td style="padding: 8px 12px; text-align: right; border: 1px solid #cbd5e0; font-size: 15px;">GH₵ 4,100.00</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <p style="text-align: justify; margin-bottom: 15px;">In accordance with our academy financial standards, all core fees must be paid instantly before classes start. Alternatively, under our secondary approved condition, full payment of hostel accommodations and a minimum payment of 60% of the tuition fee must be finalized beforehand, with any remaining outstanding balance settled in fixed installments over a maximum period of three (3) months.</p>
-                
-                <div style="background-color: #f8fafc; border: 1.5px dashed #003366; padding: 12px 18px; margin-bottom: 20px; border-radius: 6px; font-size: 13px; line-height: 1.7;">
-                    <strong style="color: #003366; text-transform: uppercase; font-size: 12px; display: block; margin-bottom: 4px;">Official Payment Channels:</strong>
-                    • <strong>Bank Account Channel:</strong> Account Number 1441001510975 | Account Name: ASLIN FASHION SCHOOL<br>
-                    • <strong>Mobile Money (MoMo) Channel:</strong> Mobile Number 0558598393 | Registered Name: ASLIN FASHION SCHOOL<br>
-                    • <strong>Direct Cash:</strong> Cash payments can be processed directly with the school accounts office on your reporting day.
-                </div>
-                
-                <p style="text-align: justify; margin-bottom: 20px;">Please remember to bring along your essential personal prospectus requirements on your arrival day, notably your <strong>Hand sewing machine</strong> (for self-use), a big-sized <strong>Brand new industrial steam electric iron</strong>, and a valid national health <strong>Insurance card</strong>.</p>
-                
-                <p style="text-align: justify; margin-bottom: 35px;">We look forward to nurturing your creativity, skills, and passion for the fashion design industry. We look forward to seeing you soon.</p>
-                
-                <!-- Signature block -->
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; font-size: 14px;">
-                    <div>
-                        <br><br>
-                        <div style="width: 180px; border-bottom: 1px solid #000; margin-bottom: 6px;"></div>
-                        <strong>The Admission Team</strong><br>
-                        ASLIN FASHION SCHOOL
-                    </div>
-                    <div style="text-align: right;">
-                        <strong>Provisional Status:</strong><br>
-                        <span style="color: green; font-weight: bold; font-size: 16px;">APPROVED</span>
-                    </div>
-                </div>
+        console.log("Generating premium admission form for:", fullName);
+
+        getLogoDataUrl().then(logoDataUrl => {
+            const logoHtml = logoDataUrl
+                ? `<img src="${logoDataUrl}" alt="Aslin Fashion School Logo" style="width:90px;height:auto;display:block;margin:0 auto 8px;">`
+                : `<div style="width:80px;height:80px;margin:0 auto 8px;border-radius:50%;background:#003366;border:3px solid #FFD700;display:flex;align-items:center;justify-content:center;color:#FFD700;font-size:22px;font-weight:bold;">AFS</div>`;
+
+            const logoHtmlWhite = logoDataUrl
+                ? `<img src="${logoDataUrl}" alt="Logo" style="width:80px;height:auto;display:block;margin:0 auto 6px;filter:brightness(0) invert(1);">`
+                : `<div style="width:70px;height:70px;margin:0 auto 6px;border-radius:50%;background:rgba(255,255,255,0.2);border:2px solid #FFD700;display:flex;align-items:center;justify-content:center;color:#FFD700;font-size:18px;font-weight:bold;">AFS</div>`;
+
+            const passportSrc = studentData._passportDataUrl || null;
+            const passportHtml = passportSrc
+                ? `<img src="${passportSrc}" style="width:100%;height:100%;object-fit:cover;border-radius:4px;" />`
+                : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:11px;text-align:center;padding:8px;">No Photo</div>`;
+
+            const container = document.createElement("div");
+            container.style.position = "absolute";
+            container.style.left = "-9999px";
+            container.style.top = "-9999px";
+            container.style.width = "760px";
+
+            container.innerHTML = `
+<div style="font-family:'Times New Roman',Times,serif;color:#1a202c;background:white;">
+
+  <!-- PAGE 1: ADMISSION LETTER -->
+  <div style="padding:40px 50px;font-size:14.5px;line-height:1.65;page-break-after:always;">
+
+    <!-- Letterhead -->
+    <div style="text-align:center;border-bottom:3px solid #003366;padding-bottom:16px;margin-bottom:24px;">
+      ${logoHtml}
+      <h1 style="color:#003366;margin:4px 0 2px;font-size:26px;text-transform:uppercase;font-weight:bold;letter-spacing:2px;font-family:Arial,sans-serif;">ASLIN FASHION SCHOOL</h1>
+      <p style="margin:0;font-size:11.5px;color:#4a5568;font-weight:600;font-family:Arial,sans-serif;">Accra &amp; Kumasi Branches, Ghana &nbsp;|&nbsp; Tel: +233 24 426 4872 / +233 54 344 3983</p>
+      <p style="margin:4px 0 0;font-size:11px;color:#718096;font-family:Arial,sans-serif;">Email: aslinfashionschoolonlineforms@gmail.com</p>
+    </div>
+
+    <!-- Ref / Date -->
+    <div style="display:flex;justify-content:space-between;margin-bottom:22px;font-size:13.5px;">
+      <div><strong>Our Ref:</strong> AFS/ADM/2026/${serialSuffix}<br><strong>Your Ref:</strong> .............................</div>
+      <div style="text-align:right;"><strong>Date:</strong> ${dateStr}<br><strong>Branch:</strong> ${studentData.preferred_branch || 'Accra / Kumasi'}</div>
+    </div>
+
+    <!-- Addressee -->
+    <div style="margin-bottom:22px;font-size:13.5px;background:#f0f4ff;border-left:5px solid #003366;padding:12px 16px;border-radius:0 6px 6px 0;">
+      <strong>To:</strong><br>
+      <span style="text-transform:uppercase;font-weight:bold;color:#003366;font-size:15px;font-family:Arial,sans-serif;">${fullName}</span><br>
+      <span style="font-size:13px;color:#4a5568;">${address}</span><br>
+      <span style="font-size:13px;">Tel: ${phone}</span>
+    </div>
+
+    <!-- Salutation & Title -->
+    <p style="margin-bottom:16px;">Dear ${firstName},</p>
+    <h3 style="text-align:center;color:#003366;text-transform:uppercase;border-top:1px solid #FFD700;border-bottom:3px double #FFD700;padding:8px 0;margin:18px 0;font-size:15px;font-weight:bold;letter-spacing:0.5px;font-family:Arial,sans-serif;">OFFER OF PROVISIONAL ADMISSION — 2025/2026 ACADEMIC SESSION</h3>
+
+    <!-- Body -->
+    <p style="text-align:justify;margin-bottom:14px;text-indent:30px;">A warm welcome to <strong>ASLIN FASHION SCHOOL</strong>! We are thrilled to inform you that you have been successfully selected to join our esteemed institution for the upcoming 2025/2026 academic year. Congratulations on this significant achievement.</p>
+    <p style="text-align:justify;margin-bottom:14px;text-indent:30px;">Your academic session will officially commence on <strong>${reportingDay}</strong>. You are requested to report directly to the academy campus on this scheduled date, fully prepared to embark on an incredible, creative journey into the professional world of fashion, design, and garment construction.</p>
+    <p style="text-align:justify;margin-bottom:14px;">As part of your entry requirements, you are expected to fulfill the primary institutional financial obligations prior to the start of instruction:</p>
+
+    <table style="width:100%;border-collapse:collapse;margin-bottom:18px;font-size:13.5px;">
+      <thead>
+        <tr style="background-color:#003366;color:white;">
+          <th style="padding:8px 12px;text-align:left;border:1px solid #cbd5e0;">Fee Description</th>
+          <th style="padding:8px 12px;text-align:right;border:1px solid #cbd5e0;width:160px;">Amount (GH&#8373;)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#f8fafc;">
+          <td style="padding:8px 12px;border:1px solid #e2e8f0;">School Fees (Tuition)</td>
+          <td style="padding:8px 12px;text-align:right;border:1px solid #e2e8f0;font-weight:bold;">2,800.00</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;border:1px solid #e2e8f0;">Hostel Accommodation Fee</td>
+          <td style="padding:8px 12px;text-align:right;border:1px solid #e2e8f0;font-weight:bold;">1,300.00</td>
+        </tr>
+        <tr style="font-weight:bold;background:#003366;color:white;">
+          <td style="padding:9px 12px;border:1px solid #003366;text-transform:uppercase;">Total Core Fees</td>
+          <td style="padding:9px 12px;text-align:right;border:1px solid #003366;font-size:15px;">4,100.00</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="background:#fffdf0;border:1.5px dashed #003366;padding:11px 16px;margin-bottom:18px;border-radius:6px;font-size:13px;line-height:1.75;">
+      <strong style="color:#003366;text-transform:uppercase;font-size:11.5px;display:block;margin-bottom:4px;font-family:Arial,sans-serif;">Official Payment Channels:</strong>
+      &bull; <strong>Bank:</strong> Account No. 1441001510975 | Account Name: ASLIN FASHION SCHOOL<br>
+      &bull; <strong>MoMo:</strong> 0558598393 | Name: ASLIN FASHION SCHOOL<br>
+      &bull; <strong>Cash:</strong> Directly at the school accounts office on your reporting day.
+    </div>
+
+    <p style="text-align:justify;margin-bottom:14px;">Please bring your <strong>Hand sewing machine</strong>, a <strong>Brand new industrial steam electric iron</strong>, and a valid national health <strong>Insurance card</strong> on your arrival day.</p>
+    <p style="text-align:justify;margin-bottom:32px;">We look forward to nurturing your creativity, skills, and passion for fashion design. We look forward to seeing you soon.</p>
+
+    <!-- Signature -->
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;font-size:13.5px;">
+      <div>
+        <br><br>
+        <div style="width:180px;border-bottom:1px solid #000;margin-bottom:5px;"></div>
+        <strong>The Admission Team</strong><br>ASLIN FASHION SCHOOL
+      </div>
+      <div style="text-align:right;">
+        <strong>Provisional Status:</strong><br>
+        <span style="color:#16a34a;font-weight:bold;font-size:17px;font-family:Arial,sans-serif;">&#10003; APPROVED</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: STUDENT ADMISSION FORM / CREDENTIALS CARD -->
+  <div style="padding:36px 44px;background:#f0f4f8;min-height:800px;">
+
+    <!-- Card Header -->
+    <div style="background:linear-gradient(135deg,#003366 0%,#00509e 100%);color:white;padding:26px 30px 22px;border-radius:14px 14px 0 0;text-align:center;">
+      ${logoHtmlWhite}
+      <h1 style="margin:6px 0 3px;font-size:24px;text-transform:uppercase;letter-spacing:2px;font-family:Arial,sans-serif;font-weight:900;">ASLIN FASHION SCHOOL</h1>
+      <p style="margin:0 0 10px;font-size:11px;opacity:0.85;font-family:Arial,sans-serif;">Accra &amp; Kumasi Branches, Ghana</p>
+      <div style="display:inline-block;background:#FFD700;color:#003366;padding:5px 22px;border-radius:20px;font-weight:800;font-size:13px;letter-spacing:1.5px;font-family:Arial,sans-serif;">STUDENT ADMISSION FORM</div>
+    </div>
+
+    <!-- Card Body -->
+    <div style="background:white;border:2px solid #003366;border-top:none;border-radius:0 0 14px 14px;padding:28px 30px;box-shadow:0 6px 24px rgba(0,51,102,0.12);">
+
+      <!-- Photo + Credentials Row -->
+      <div style="display:flex;gap:22px;margin-bottom:22px;align-items:flex-start;">
+
+        <!-- Passport Photo -->
+        <div style="flex-shrink:0;text-align:center;">
+          <div style="width:115px;height:140px;border:3px solid #003366;border-radius:8px;overflow:hidden;background:#f0f4ff;">
+            ${passportHtml}
+          </div>
+          <div style="font-size:9.5px;color:#6b7280;margin-top:4px;font-family:Arial,sans-serif;text-transform:uppercase;letter-spacing:0.5px;">Passport Photo</div>
+        </div>
+
+        <!-- Credentials Box -->
+        <div style="flex:1;">
+          <div style="background:linear-gradient(135deg,#f0f7ff,#e4effe);border:2px solid #003366;border-radius:10px;padding:18px 20px;">
+            <div style="font-size:9.5px;font-family:Arial,sans-serif;text-transform:uppercase;color:#6b7280;font-weight:700;letter-spacing:1.5px;margin-bottom:12px;">Applicant Credentials</div>
+
+            <div style="margin-bottom:14px;">
+              <div style="font-size:9px;color:#6b7280;font-family:Arial,sans-serif;text-transform:uppercase;font-weight:700;margin-bottom:2px;">Full Name</div>
+              <div style="font-size:17px;font-weight:900;color:#003366;font-family:Arial,sans-serif;text-transform:uppercase;letter-spacing:0.5px;">${fullName}</div>
             </div>
-        `;
-        
-        document.body.appendChild(container);
-        
-        const opt = {
-            margin:       [10, 10, 10, 10],
-            filename:     `GFA_Admission_Letter_${safeName}.pdf`,
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-        
-        html2pdf().set(opt).from(container).save().then(() => {
-            document.body.removeChild(container);
-        }).catch(err => {
-            console.error("PDF generation promise failed:", err);
-            document.body.removeChild(container);
+
+            <div style="display:flex;gap:14px;margin-top:14px;">
+              <div style="flex:1;background:#003366;color:white;border-radius:10px;padding:13px 14px;text-align:center;">
+                <div style="font-size:8.5px;font-family:Arial,sans-serif;text-transform:uppercase;letter-spacing:1.5px;opacity:0.75;margin-bottom:5px;">Serial Number</div>
+                <div style="font-size:14px;font-weight:900;font-family:'Courier New',monospace;letter-spacing:2px;">${serial}</div>
+              </div>
+              <div style="flex:1;background:#FFD700;color:#003366;border-radius:10px;padding:13px 14px;text-align:center;border:2px solid #003366;">
+                <div style="font-size:8.5px;font-family:Arial,sans-serif;text-transform:uppercase;letter-spacing:1.5px;opacity:0.7;margin-bottom:5px;">Access PIN</div>
+                <div style="font-size:14px;font-weight:900;font-family:'Courier New',monospace;letter-spacing:2px;">${pin}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashed cut line -->
+      <div style="position:relative;text-align:center;margin:18px 0;">
+        <div style="border-top:2px dashed #cbd5e0;position:absolute;top:50%;left:0;right:0;"></div>
+        <span style="background:white;padding:0 14px;position:relative;color:#9ca3af;font-size:12px;font-family:Arial,sans-serif;">&#9988; Cut and keep this card</span>
+      </div>
+
+      <!-- Details Grid -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:12.5px;font-family:Arial,sans-serif;margin-bottom:20px;">
+        <div>
+          <div style="color:#6b7280;font-size:9.5px;text-transform:uppercase;font-weight:700;margin-bottom:2px;">Gender</div>
+          <div style="border-bottom:1.5px solid #e2e8f0;padding-bottom:5px;font-weight:600;color:#1a202c;">${studentData.gender || 'N/A'}</div>
+        </div>
+        <div>
+          <div style="color:#6b7280;font-size:9.5px;text-transform:uppercase;font-weight:700;margin-bottom:2px;">Date of Birth</div>
+          <div style="border-bottom:1.5px solid #e2e8f0;padding-bottom:5px;font-weight:600;color:#1a202c;">${studentData.dob || 'N/A'}</div>
+        </div>
+        <div>
+          <div style="color:#6b7280;font-size:9.5px;text-transform:uppercase;font-weight:700;margin-bottom:2px;">Preferred Branch</div>
+          <div style="border-bottom:1.5px solid #e2e8f0;padding-bottom:5px;font-weight:600;color:#1a202c;">${studentData.preferred_branch || 'N/A'}</div>
+        </div>
+        <div>
+          <div style="color:#6b7280;font-size:9.5px;text-transform:uppercase;font-weight:700;margin-bottom:2px;">Admission Batch</div>
+          <div style="border-bottom:1.5px solid #e2e8f0;padding-bottom:5px;font-weight:600;color:#003366;">${studentData.admission_batch || 'N/A'}</div>
+        </div>
+        <div>
+          <div style="color:#6b7280;font-size:9.5px;text-transform:uppercase;font-weight:700;margin-bottom:2px;">Residential Status</div>
+          <div style="border-bottom:1.5px solid #e2e8f0;padding-bottom:5px;font-weight:600;color:#1a202c;">${studentData.residential || 'N/A'}</div>
+        </div>
+        <div>
+          <div style="color:#6b7280;font-size:9.5px;text-transform:uppercase;font-weight:700;margin-bottom:2px;">Issue Date</div>
+          <div style="border-bottom:1.5px solid #e2e8f0;padding-bottom:5px;font-weight:600;color:#1a202c;">${dateStr}</div>
+        </div>
+      </div>
+
+      <!-- Important notice -->
+      <div style="background:#fff8e1;border:1.5px solid #ffc107;border-radius:8px;padding:12px 16px;font-size:12px;font-family:Arial,sans-serif;color:#856404;">
+        <strong>&#9888; IMPORTANT:</strong> Keep your <strong>Serial Number</strong> and <strong>PIN</strong> strictly confidential. These are unique to you and cannot be reused once submitted. <strong>Present this form on your reporting day.</strong>
+      </div>
+
+      <!-- Footer -->
+      <div style="background:#003366;color:white;text-align:center;padding:12px 16px;border-radius:8px;margin-top:18px;font-size:11.5px;font-family:Arial,sans-serif;letter-spacing:0.5px;">
+        <strong>ASLIN FASHION SCHOOL</strong> &nbsp;|&nbsp; +233 24 426 4872 / +233 54 344 3983 &nbsp;|&nbsp; aslinfashionschoolonlineforms@gmail.com
+      </div>
+    </div>
+  </div>
+
+</div>`;
+
+            document.body.appendChild(container);
+
+            const opt = {
+                margin:       [8, 8, 8, 8],
+                filename:     `Aslin_Admission_Form_${safeName}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, letterRendering: true, allowTaint: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(container).save().then(() => {
+                document.body.removeChild(container);
+                console.log("Admission form PDF generated for:", fullName);
+            }).catch(err => {
+                console.error("PDF generation failed:", err);
+                document.body.removeChild(container);
+                alert("Could not generate PDF. Please try printing the page instead.");
+            });
         });
-        
+
     } else {
         console.warn("html2pdf library not detected. Falling back to generic PDF.");
         try {
             const pdfPath = "General_Fashion_Academy_Letter_Single_Sheet.pdf";
             const a = document.createElement("a");
             a.href = pdfPath;
-            a.download = `GFA_Admission_Letter_${safeName}.pdf`;
+            a.download = `Aslin_Admission_Form_${safeName}.pdf`;
             a.target = "_blank";
             document.body.appendChild(a);
             a.click();
             a.remove();
-            console.log("Admission letter download triggered successfully for:", fullName);
+            console.log("Admission letter fallback download triggered for:", fullName);
         } catch (error) {
             console.error("Error downloading admission letter:", error);
-            alert("Error: Could not download the admission letter. Please contact support.");
+            alert("Error: Could not download the admission form. Please contact support.");
         }
     }
 }

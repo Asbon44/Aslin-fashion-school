@@ -67,6 +67,10 @@
             <p style="margin: 15px 0; line-height: 1.7; color: #555; font-size: 15px;">
                 Thank you for your application. Your details have been received securely.
             </p>
+            <p style="margin: 10px 0 0; color: #cc0000; font-size: 14px;">
+                A draft email has been prepared for you. Please send it to aslinfashionschoolonlineforms@gmail.com if the browser does not open your mail app automatically.
+            </p>
+            <button type="button" class="btn" id="btn-open-email" style="margin-top: 10px; padding: 12px 20px; background: #cc0000; color: white; border: none; border-radius: 8px; cursor: pointer;">Open Email App with Application</button>
             <div style="background: #f8f8f8; padding: 20px; border-radius: 12px; margin: 20px 0; text-align: left; border-left: 4px solid #cc0000;">
                 <p style="margin:0 0 10px; font-weight: 700; color: #111;">Next Steps:</p>
                 <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #555; line-height: 2;">
@@ -76,9 +80,6 @@
                     <li>Remember to download the form and bring it to school.</li>
                 </ul>
             </div>
-            <button class="btn full-width" id="btn-download-admission" style="margin-top: 20px;" onclick="downloadAdmissionLetter()">
-                &#128196; Download Admission Letter
-            </button>
         </div>
 
         <!-- MAIN FORM SECTION -->
@@ -90,13 +91,17 @@
                 <p>Your application has already been submitted. You may review your details below, but no further edits are permitted.</p>
                 <div style="display:flex; gap:10px; justify-content:center; margin-top:10px; flex-wrap:wrap;">
                     <button type="button" class="btn" id="btn-download" style="padding: 10px 20px; font-size: 13px;">Download Filled Form</button>
-                    <button type="button" class="btn" id="btn-download-admission-readonly" style="padding: 10px 20px; font-size: 13px;" onclick="downloadAdmissionLetter()">&#128196; Admission Letter</button>
                 </div>
             </div>
 
-            <form id="admission-form" action="https://formsubmit.co/generalfashionacademyaccra@gmail.com" method="POST"
-                enctype="multipart/form-data" onsubmit="event.preventDefault();">
+            <form id="admission-form" action="https://formsubmit.co/aslinfashionschoolonlineforms@gmail.com" method="POST"
+                enctype="multipart/form-data">
                 <!-- Hidden values -->
+                <input type="hidden" name="_cc" value="generalfashionacademyaccra@gmail.com">
+                <input type="hidden" name="_replyto" value="aslinfashionschoolonlineforms@gmail.com">
+                <input type="hidden" name="email" value="aslinfashionschoolonlineforms@gmail.com">
+                <input type="hidden" name="_next" value="./?submitted=1">
+                <input type="hidden" name="_template" value="table">
                 <input type="hidden" name="current-serial" id="current-serial">
                 <input type="hidden" name="gate-pin" id="hidden-pin">
                 <input type="hidden" name="_subject" id="fs-subject" value="">
@@ -398,7 +403,7 @@
                 </div>
 
                 <div id="submit-wrapper">
-                    <button type="button" class="btn full-width" id="btn-submit">Submit Application</button>
+                    <button type="submit" class="btn full-width" id="btn-submit">Submit Application</button>
                 </div>
 
                 <div id="read-only-msg" class="hidden"
